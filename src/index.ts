@@ -5,8 +5,17 @@ import cors from 'cors'
 import sequelize from './database/database'
 
 import './models/User'
+import './models/Disco'
+import './models/DiscoDetail'
+import './models/DiscoAdmission'
+import './models/Combo'
+import './models/ComboDetail'
+import './models/Subscription'
+import './models/Reservation'
+import './models/AdmissionReservation'
+import './models/ComboReservation'
 
-import usersRoutes from './routes/user.routes'
+import usersRoutes from './routes/users.routes'
 import config from './config'
 const { originAllowed }: any = config
 
@@ -23,7 +32,7 @@ app.use(morgan("dev")); //muestra por consola en modo desarrollo las solicitudes
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
-app.use('/api/users', usersRoutes)
+app.use('/api/user', usersRoutes)
 
 const PORT = process.env.PORT || 4000
 

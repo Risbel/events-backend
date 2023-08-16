@@ -90,7 +90,7 @@ export const deleteUser = async (req: Request, res: Response): Promise<Response>
 			},
 		});
 
-		return res.sendStatus(204);
+		return res.sendStatus(200).json({ message: "User deleted successfuly" });
 
 	} catch (error: any) {
 		return res.status(500).json({ message: error.message });
