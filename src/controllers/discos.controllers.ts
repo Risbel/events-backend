@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import Disco from '../models/Disco'
 import DiscoDetail from '../models/DiscoDetail'
+import DiscoRole from '../models/DiscoRole'
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
 	try {
@@ -36,6 +37,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 	try {
 		const { name, logo, slug, administrator, description, image, address } = req.body
 
+
 		const newDisco: any = await Disco.create(
 			{
 				name,
@@ -53,6 +55,14 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 				slug
 			}
 		)
+		await DiscoRole.bulkCreate(
+			[
+				{ role: "user", discoId },
+				{ role: "moderator", discoId },
+				{ role: "admin", discoId }
+			]
+		)
+
 		return res.status(200).json({ disco: newDisco, details: detailsDisco })
 	} catch (error: any) {
 		return res.status(500).json({ message: error.message });
@@ -92,14 +102,13 @@ export const deleteDisco = async (req: Request, res: Response): Promise<Response
 		const { id } = req.params
 
 		await DiscoDetail.destroy({
-			where: {
-				discoId: id
-			}
+			where: { discoId: id }
 		})
 		await Disco.destroy({
-			where: {
-				id: id
-			}
+			where: { id: id }
+		})
+		await DiscoRole.destroy({
+			where: { discoId: id }
 		})
 
 		return res.status(200).json({ message: "Disco deleted successfuly" });

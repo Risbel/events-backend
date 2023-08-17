@@ -4,6 +4,7 @@ import DiscoDetail from './DiscoDetail'
 import DiscoAdmission from './DiscoAdmission'
 import Subscription from './Subscription'
 import Combo from './Combo'
+import DiscoRole from './DiscoRole'
 
 const Disco = sequelize.define("Disco", {
 	id: {
@@ -65,6 +66,18 @@ Disco.hasMany(Combo, {
 	sourceKey: 'id'
 })
 Combo.belongsTo(Disco, {
+	foreignKey: 'discoId',
+	targetKey: 'id'
+})
+
+Disco.hasMany(DiscoRole, {
+	foreignKey: {
+		name: 'discoId',
+		allowNull: false
+	},
+	sourceKey: 'id'
+})
+DiscoRole.belongsTo(Disco, {
 	foreignKey: 'discoId',
 	targetKey: 'id'
 })

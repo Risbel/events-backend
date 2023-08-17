@@ -14,6 +14,7 @@ import './models/Subscription'
 import './models/Reservation'
 import './models/AdmissionReservation'
 import './models/ComboReservation'
+import './models/DiscoRole'
 
 import usersRoutes from './routes/users.routes'
 import discoRoutes from './routes/discos.routes'
