@@ -18,10 +18,6 @@ const Disco = sequelize.define("Disco", {
 	},
 	logo: {
 		type: DataTypes.STRING,
-	},
-	slug: {
-		type: DataTypes.STRING,
-		unique: true,
 	}
 })
 

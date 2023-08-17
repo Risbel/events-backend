@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import User from '../models/User'
 import { UserEntries } from '../types.t';
+import Reservation from '../models/Reservation';
 
 
 export const getUsers = async (_req: Request, res: Response): Promise<Response> => {
@@ -28,6 +29,24 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
 		}
 
 		return res.status(200).json(user);
+	} catch (error) {
+		return res.status(500).json({ error: "Internal server error" })
+	}
+}
+
+export const getUserReservations = async (req: Request, res: Response) => {
+	try {
+		const { id } = req.params
+
+		const userReservations = await User.findOne({
+			where: {
+				id
+			},
+			include: Reservation
+		})
+
+		return res.status(200).json(userReservations)
+
 	} catch (error) {
 		return res.status(500).json({ error: "Internal server error" })
 	}

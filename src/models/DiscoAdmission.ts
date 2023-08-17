@@ -11,6 +11,12 @@ const DiscoAdmission = sequelize.define("DiscoAdmission", {
 	price: {
 		type: DataTypes.DECIMAL,
 	},
+	description: {
+		type: DataTypes.STRING
+	},
+	category: {
+		type: DataTypes.STRING
+	},
 	quantity: {
 		type: DataTypes.INTEGER,
 	},

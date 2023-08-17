@@ -16,6 +16,8 @@ import './models/AdmissionReservation'
 import './models/ComboReservation'
 
 import usersRoutes from './routes/users.routes'
+import discoRoutes from './routes/discos.routes'
+import discoAdmisionsRoutes from './routes/discoAdmisions.routes'
 import config from './config'
 const { originAllowed }: any = config
 
@@ -33,6 +35,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 
 app.use('/api/user', usersRoutes)
+app.use('/api/disco', discoRoutes)
+app.use('/api/disco-admision', discoAdmisionsRoutes)
 
 const PORT = process.env.PORT || 4000
 
