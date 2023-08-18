@@ -12,9 +12,12 @@ const db = {
 
 const originAllowed = process.env.URL_ALLOWED_CLIENT
 
+const secretSignJwt: any = process.env.SECRET_TOKEN
+
 const appConfig = {
 	db,
-	originAllowed
+	originAllowed,
+	secretSignJwt
 };
 
 export default appConfig

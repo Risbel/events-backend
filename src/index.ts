@@ -17,6 +17,7 @@ import './models/ComboReservation'
 import './models/DiscoRole'
 
 import usersRoutes from './routes/users.routes'
+import authRoutes from './routes/auth.routes'
 import discoRoutes from './routes/discos.routes'
 import discoAdmisionsRoutes from './routes/discoAdmisions.routes'
 import config from './config'
@@ -38,6 +39,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use('/api/user', usersRoutes)
 app.use('/api/disco', discoRoutes)
 app.use('/api/disco-admision', discoAdmisionsRoutes)
+app.use('./api', authRoutes)
 
 const PORT = process.env.PORT || 4000
 
