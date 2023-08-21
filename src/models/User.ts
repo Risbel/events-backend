@@ -2,6 +2,7 @@ import { DataTypes } from 'sequelize'
 import sequelize from '../database/database'
 import Reservation from './Reservation';
 import Subscription from './Subscription';
+import DiscoDetail from './DiscoDetail';
 
 const User = sequelize.define("User", {
 	id: {
@@ -58,6 +59,18 @@ User.hasMany(Subscription, {
 })
 Subscription.belongsTo(User, {
 	foreignKey: 'userId',
+	targetKey: 'id'
+})
+
+User.hasOne(DiscoDetail, {
+	foreignKey: {
+		name: 'administrator',
+		allowNull: false
+	},
+	sourceKey: 'id'
+})
+DiscoDetail.belongsTo(User, {
+	foreignKey: 'administrator',
 	targetKey: 'id'
 })
 

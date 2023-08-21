@@ -15,3 +15,4 @@ export interface UserEntries {
 	password: string;
 	imageUrl: string;
 }
+

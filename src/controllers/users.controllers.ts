@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import bcrypt from 'bcryptjs'
 import User from '../models/User'
-import { UserEntries } from '../types.t';
+import { UserEntries } from '../types';
 import Reservation from '../models/Reservation';
 
 

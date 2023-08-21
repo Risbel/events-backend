@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import Disco from '../models/Disco'
 import DiscoDetail from '../models/DiscoDetail'
 import DiscoRole from '../models/DiscoRole'
+import User from '../models/User'
+import Subscription from '../models/Subscription'
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
 	try {
@@ -14,11 +16,11 @@ export const getDiscos = async (_req: Request, res: Response): Promise<Response>
 
 export const getDisco = async (req: Request, res: Response): Promise<Response> => {
 	try {
-		const { id } = req.params;
+		const { slug, userId } = req.params;
 
-		const disco = await Disco.findOne({
+		const disco: any = await Disco.findOne({
 			where: {
-				id: id
+				'$discoDetail.slug$': slug
 			},
 			include: DiscoDetail
 		})
@@ -27,7 +29,22 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
 			res.status(404).json({ message: "Disco does not exist" });
 		}
 
+		if (userId) {
+			const subscriptions: any = await Subscription.findAll({
+				where: { discoId: disco.id }, include: DiscoRole
+			})
+
+			const subscription = subscriptions.find((sub: any) => sub.userId === userId)
+
+			if (subscription) {
+				return res.status(200).json({ disco, subscription })
+			}
+
+			return res.status(200).json({ disco })
+		}
+
 		return res.status(200).json(disco)
+
 	} catch (error: any) {
 		return res.status(500).json({ message: error.message });
 	}

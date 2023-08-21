@@ -7,11 +7,6 @@ const DiscoDetail = sequelize.define("discoDetail", {
 		defaultValue: DataTypes.UUIDV4,
 		primaryKey: true,
 	},
-	administrator: {
-		type: DataTypes.STRING,
-		unique: true,
-		allowNull: false,
-	},
 	description: {
 		type: DataTypes.STRING,
 	},

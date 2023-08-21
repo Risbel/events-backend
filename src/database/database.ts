@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize'
 import pg from 'pg'
 import appConfig from '../config'
 
-import { DbConfig } from '../types.t'
+import { DbConfig } from '../types'
 
 const db = appConfig.db as DbConfig;  //as para hacer una aserción de tipo en una sola línea
 
