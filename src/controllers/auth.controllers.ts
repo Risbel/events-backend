@@ -7,7 +7,7 @@ import appConfig from '../config'
 
 export const signup = async (req: Request, res: Response) => {
 	try {
-		const { name, nickName, email, password, phone, image, bio, address } = req.body
+		const { name, lastName, email, phone, password } = req.body
 
 		const isNameExist = await User.findOne({ where: { name: name } });
 		if (isNameExist) {
@@ -26,12 +26,9 @@ export const signup = async (req: Request, res: Response) => {
 
 		const newUser: any = await User.create({
 			name,
-			nickName,
+			lastName,
 			email,
 			phone,
-			image,
-			bio,
-			address,
 			password: hashedPassword,
 		});
 
@@ -48,7 +45,7 @@ export const signup = async (req: Request, res: Response) => {
 			}
 		);
 
-		return res.json({ accessToken: token });
+		return res.json({ status: true, accessToken: token });
 
 	} catch (error) {
 		return
@@ -98,9 +95,8 @@ export const login = async (req: Request, res: Response) => {
 			}
 		);
 
-		return res.json({ accessToken: token });
+		return res.json({ status: true, accessToken: token });
 	} catch (error) {
 		return res.status(500).json({ error: "Internal server error" })
 	}
-
 }

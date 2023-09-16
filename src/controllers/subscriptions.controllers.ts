@@ -14,9 +14,9 @@ export const getSubscriptions = async (_req: Request, res: Response) => {
 
 export const getSubscriptionsByIdUser = async (req: Request, res: Response) => {
 	try {
-		const { userId } = req.params
+		const { id } = req.params
 
-		const subscriptionByIdUser = await Subscription.findAll({ include: { model: DiscoRole, where: { userId: userId } } })
+		const subscriptionByIdUser = await Subscription.findAll({ where: { userId: id } })
 
 		if (!subscriptionByIdUser) {
 			return res.status(404).json({ message: "Subscriptions not found" })

@@ -15,6 +15,7 @@ import './models/Reservation'
 import './models/AdmissionReservation'
 import './models/ComboReservation'
 import './models/DiscoRole'
+import './models/DiscoNetworks'
 
 import usersRoutes from './routes/users.routes'
 import authRoutes from './routes/auth.routes'
@@ -22,14 +23,15 @@ import discoRoutes from './routes/discos.routes'
 import discoAdmisionsRoutes from './routes/discoAdmisions.routes'
 import subscriptions from './routes/subscriptions.routes'
 import config from './config'
-const { originAllowed }: any = config
 
+const { originAllowed }: any = config
 
 const app = express()
 
 app.use(
 	cors({
-		origin: [originAllowed]
+		origin: [originAllowed],
+		credentials: true
 	})
 )
 

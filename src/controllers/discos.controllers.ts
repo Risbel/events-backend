@@ -4,6 +4,7 @@ import DiscoDetail from '../models/DiscoDetail'
 import DiscoRole from '../models/DiscoRole'
 import User from '../models/User'
 import Subscription from '../models/Subscription'
+import DiscoNetworks from '../models/DiscoNetworks'
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
 	try {
@@ -19,10 +20,21 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
 		const { slug, userId } = req.params;
 
 		const disco: any = await Disco.findOne({
-			where: {
-				'$discoDetail.slug$': slug
-			},
-			include: DiscoDetail
+			include: [
+				{
+					model: DiscoDetail,
+					where: {
+						slug: slug
+					},
+					include: [
+						{
+							model: DiscoNetworks,
+							required: false
+						}
+					]
+				}
+			]
+
 		})
 
 		if (!disco) {
@@ -37,13 +49,13 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
 			const subscription = subscriptions.find((sub: any) => sub.userId === userId)
 
 			if (subscription) {
-				return res.status(200).json({ disco, subscription })
+				return res.status(200).json({ disco: disco, subscription: subscription })
 			}
 
-			return res.status(200).json({ disco })
+			return res.status(200).json({ disco: disco })
 		}
 
-		return res.status(200).json(disco)
+		return res.status(200).json({ disco: disco })
 
 	} catch (error: any) {
 		return res.status(500).json({ message: error.message });
@@ -52,7 +64,7 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
 
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
 	try {
-		const { name, logo, slug, administrator, description, image, address } = req.body
+		const { name, logo, slug, administrator, description, largeDescription, image, bgImage, address } = req.body
 
 
 		const newDisco: any = await Disco.create(
@@ -67,7 +79,9 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 				discoId,
 				administrator,
 				description,
+				largeDescription,
 				image,
+				bgImage,
 				address,
 				slug
 			}
