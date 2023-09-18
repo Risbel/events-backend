@@ -1,23 +1,23 @@
-import { config } from 'dotenv' //importo la funcion
-config() //la ejecuto para cargar mis variables de entorno definidas en un archivo .env en el objeto process.env
+import { config } from "dotenv"; //importo la funcion
+config(); //la ejecuto para cargar mis variables de entorno definidas en un archivo .env en el objeto process.env
 
 const db = {
-	//   connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-	user: process.env.DB_USER,
-	password: process.env.DB_PASSWORD,
-	host: process.env.DB_HOST,
-	port: process.env.DB_PORT,
-	database: process.env.DB_DATABASE
-}
-
-const originAllowed = process.env.URL_ALLOWED_CLIENT
-
-const secretSignJwt: any = process.env.SECRET_TOKEN
-
-const appConfig = {
-	db,
-	originAllowed,
-	secretSignJwt
+  //   connectionString: process.env.POSTGRES_URL + "?sslmode=require",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_DATABASE,
 };
 
-export default appConfig
+const originAllowed = process.env.URL_ALLOWED_CLIENT;
+
+const secretSignJwt: any = process.env.SECRET_TOKEN;
+
+const appConfig = {
+  db,
+  originAllowed,
+  secretSignJwt,
+};
+
+export default appConfig;

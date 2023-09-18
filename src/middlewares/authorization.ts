@@ -7,9 +7,7 @@ import Subscription from "../models/Subscription";
 
 export const verifyToken = async (req: any, res: Response, next: NextFunction) => {
   try {
-    const token = req.cookies["next-auth.session-token"];
-    const csrfToken = req.cookies["next-auth.csrf-token"];
-    const callbackUrl = req.cookies["next-auth.callback-url"];
+    var token = req.headers.authorization.replace("Bearer ", "");
 
     if (!token) {
       return res.status(403).json({ message: "No token provided" });
@@ -33,8 +31,6 @@ export const verifyToken = async (req: any, res: Response, next: NextFunction) =
 
 export const isAdmin = async (req: any, res: Response, next: NextFunction) => {
   const user: any = await User.findByPk(req.userId, { include: [Subscription] }); //req.userId existe porque en la funcion anterior lo hemos seteado en e objeto req
-
-  console.log(user);
 
   // if (user.name === "admin") {
   // 	next();
