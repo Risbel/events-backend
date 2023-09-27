@@ -82,7 +82,6 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       email,
     });
     await DiscoRole.bulkCreate([
-      { name: "superAdmin", discoId },
       { name: "user", discoId },
       { name: "moderator", discoId },
       { name: "admin", discoId },

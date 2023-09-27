@@ -24,6 +24,7 @@ import discoRoutes from "./routes/discos.routes";
 import discoAdmisionsRoutes from "./routes/discoAdmisions.routes";
 import subscriptions from "./routes/subscriptions.routes";
 import config from "./config";
+import { createSuperAdmin } from "./utils/createSuperAdmin";
 
 const { originAllowed }: any = config;
 
@@ -52,6 +53,8 @@ const PORT = process.env.PORT || 4000;
 async function main() {
   try {
     await sequelize.sync({ alter: true, logging: false });
+
+    await createSuperAdmin();
     app.listen(PORT, () => {
       console.log("server on port", PORT);
     });
