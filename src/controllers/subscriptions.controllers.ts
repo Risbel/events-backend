@@ -36,7 +36,7 @@ export const createSubscription = async (req: Request, res: Response) => {
 
     const roles = await DiscoRole.findAll({ where: { discoId: discoId } });
 
-    const userRole: any = roles.find((role: any) => role.role === "user");
+    const userRole: any = roles.find((role: any) => role.name === "user");
     const roleId = userRole.id;
 
     const newSubscription = await Subscription.create({
@@ -55,7 +55,7 @@ export const deleteSubscription = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    await Subscription.destroy({ where: { userId: id } });
+    await Subscription.destroy({ where: { id: id } });
 
     return res.status(200).json({ message: "Canceled subscription" });
   } catch (error: any) {

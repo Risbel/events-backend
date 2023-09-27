@@ -1,149 +1,144 @@
-import { Request, Response } from 'express'
-import Disco from '../models/Disco'
-import DiscoDetail from '../models/DiscoDetail'
-import DiscoRole from '../models/DiscoRole'
-import User from '../models/User'
-import Subscription from '../models/Subscription'
-import DiscoNetworks from '../models/DiscoNetworks'
+import { Request, Response } from "express";
+import Disco from "../models/Disco";
+import DiscoDetail from "../models/DiscoDetail";
+import DiscoRole from "../models/DiscoRole";
+import User from "../models/User";
+import Subscription from "../models/Subscription";
+import DiscoNetworks from "../models/DiscoNetworks";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
-	try {
-		const discos = await Disco.findAll({ include: DiscoDetail })
-		return res.json(discos)
-	} catch (error: any) {
-		return res.status(500).json({ message: error.message });
-	}
-}
+  try {
+    const discos = await Disco.findAll({ include: DiscoDetail });
+    return res.json(discos);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 export const getDisco = async (req: Request, res: Response): Promise<Response> => {
-	try {
-		const { slug, userId } = req.params;
+  try {
+    const { slug, userId } = req.params;
 
-		const disco: any = await Disco.findOne({
-			include: [
-				{
-					model: DiscoDetail,
-					where: {
-						slug: slug
-					},
-					include: [
-						{
-							model: DiscoNetworks,
-							required: false
-						}
-					]
-				}
-			]
+    const disco: any = await Disco.findOne({
+      include: [
+        {
+          model: DiscoDetail,
+          where: {
+            slug: slug,
+          },
+          include: [
+            {
+              model: DiscoNetworks,
+              required: false,
+            },
+          ],
+        },
+      ],
+    });
 
-		})
+    if (!disco) {
+      res.status(404).json({ message: "Disco does not exist" });
+    }
 
-		if (!disco) {
-			res.status(404).json({ message: "Disco does not exist" });
-		}
+    if (userId) {
+      const subscriptions: any = await Subscription.findAll({
+        where: { discoId: disco.id },
+        include: DiscoRole,
+      });
 
-		if (userId) {
-			const subscriptions: any = await Subscription.findAll({
-				where: { discoId: disco.id }, include: DiscoRole
-			})
+      const subscription = subscriptions.find((sub: any) => sub.userId === userId);
 
-			const subscription = subscriptions.find((sub: any) => sub.userId === userId)
+      if (subscription) {
+        return res.status(200).json({ disco: disco, subscription: subscription });
+      }
 
-			if (subscription) {
-				return res.status(200).json({ disco: disco, subscription: subscription })
-			}
+      return res.status(200).json({ disco: disco });
+    }
 
-			return res.status(200).json({ disco: disco })
-		}
-
-		return res.status(200).json({ disco: disco })
-
-	} catch (error: any) {
-		return res.status(500).json({ message: error.message });
-	}
-}
+    return res.status(200).json({ disco: disco });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
-	try {
-		const { name, logo, slug, administrator, description, largeDescription, image, bgImage, address } = req.body
+  try {
+    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, phone, email } = req.body;
 
+    const newDisco: any = await Disco.create({
+      name,
+      logo,
+    });
+    const discoId = newDisco.id;
+    const detailsDisco = await DiscoDetail.create({
+      discoId,
+      administrator,
+      description,
+      largeDescription,
+      bgImage,
+      address,
+      slug,
+      phone,
+      email,
+    });
+    await DiscoRole.bulkCreate([
+      { name: "superAdmin", discoId },
+      { name: "user", discoId },
+      { name: "moderator", discoId },
+      { name: "admin", discoId },
+    ]);
 
-		const newDisco: any = await Disco.create(
-			{
-				name,
-				logo,
-			}
-		)
-		const discoId = newDisco.id
-		const detailsDisco = await DiscoDetail.create(
-			{
-				discoId,
-				administrator,
-				description,
-				largeDescription,
-				image,
-				bgImage,
-				address,
-				slug
-			}
-		)
-		await DiscoRole.bulkCreate(
-			[
-				{ role: "user", discoId },
-				{ role: "moderator", discoId },
-				{ role: "admin", discoId }
-			]
-		)
-
-		return res.status(200).json({ disco: newDisco, details: detailsDisco })
-	} catch (error: any) {
-		return res.status(500).json({ message: error.message });
-	}
-}
+    return res.status(200).json({ disco: newDisco, details: detailsDisco });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 export const updateDisco = async (req: Request, res: Response): Promise<Response> => {
-	try {
+  try {
+    const { id } = req.params;
+    const { name, logo, slug, administrator, description, largeDescription, bgImage, address, phone, email } = req.body;
 
-		const { id } = req.params
-		const { name, logo, slug, administrator, description, image, address } = req.body
+    const disco: any = await Disco.findByPk(id);
+    const discoDetails: any = await DiscoDetail.findOne({
+      where: { discoId: id },
+    });
+    disco.name = name;
+    disco.logo = logo;
+    discoDetails.slug = slug;
+    discoDetails.administrator = administrator;
+    discoDetails.description = description;
+    discoDetails.largeDescription = largeDescription;
+    discoDetails.bgImage = bgImage;
+    discoDetails.address = address;
+    discoDetails.phone = phone;
+    discoDetails.email = email;
 
-		const disco: any = await Disco.findByPk(id)
-		const discoDetails: any = await DiscoDetail.findOne({
-			where: { discoId: id }
-		})
-		disco.name = name
-		disco.logo = logo
-		discoDetails.slug = slug
-		discoDetails.administrator = administrator
-		discoDetails.description = description
-		discoDetails.image = image
-		discoDetails.address = address
+    const newDisco = await disco.save();
+    const details = await discoDetails.save();
 
-		const newDisco = await disco.save()
-		const details = await discoDetails.save()
-
-		return res.status(200).json({ disco: newDisco, details: details })
-	} catch (error: any) {
-		return res.status(500).json({ message: error.message });
-	}
-}
+    return res.status(200).json({ disco: newDisco, details: details });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 export const deleteDisco = async (req: Request, res: Response): Promise<Response> => {
-	try {
+  try {
+    const { id } = req.params;
 
-		const { id } = req.params
+    await DiscoDetail.destroy({
+      where: { discoId: id },
+    });
+    await Disco.destroy({
+      where: { id: id },
+    });
+    await DiscoRole.destroy({
+      where: { discoId: id },
+    });
 
-		await DiscoDetail.destroy({
-			where: { discoId: id }
-		})
-		await Disco.destroy({
-			where: { id: id }
-		})
-		await DiscoRole.destroy({
-			where: { discoId: id }
-		})
-
-		return res.status(200).json({ message: "Disco deleted successfuly" });
-	} catch (error: any) {
-		return res.status(500).json({ message: error.message });
-	}
-}
+    return res.status(200).json({ message: "Disco deleted successfuly" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
