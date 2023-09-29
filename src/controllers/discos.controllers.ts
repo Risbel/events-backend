@@ -5,6 +5,7 @@ import DiscoRole from "../models/DiscoRole";
 import User from "../models/User";
 import Subscription from "../models/Subscription";
 import DiscoNetworks from "../models/DiscoNetworks";
+import DiscoImage from "../models/DiscoImage";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -29,6 +30,10 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
           include: [
             {
               model: DiscoNetworks,
+              required: false,
+            },
+            {
+              model: DiscoImage,
               required: false,
             },
           ],

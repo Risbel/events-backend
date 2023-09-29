@@ -17,12 +17,15 @@ import "./models/AdmissionReservation";
 import "./models/ComboReservation";
 import "./models/DiscoRole";
 import "./models/DiscoNetworks";
+import "./models/DiscoImage";
 
 import usersRoutes from "./routes/users.routes";
 import authRoutes from "./routes/auth.routes";
 import discoRoutes from "./routes/discos.routes";
 import discoAdmisionsRoutes from "./routes/discoAdmisions.routes";
-import subscriptions from "./routes/subscriptions.routes";
+import subscriptionsRoutes from "./routes/subscriptions.routes";
+import discoImagesRoutes from "./routes/discoImages.routes";
+
 import config from "./config";
 import { createSuperAdmin } from "./utils/createSuperAdmin";
 
@@ -44,9 +47,10 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/user", usersRoutes);
 app.use("/api/disco", discoRoutes);
-app.use("/api/disco-admision", discoAdmisionsRoutes);
+app.use("/api/discoAdmision", discoAdmisionsRoutes);
 app.use("/api", authRoutes);
-app.use("/api/subscription", subscriptions);
+app.use("/api/subscription", subscriptionsRoutes);
+app.use("/api/discoImage", discoImagesRoutes);
 
 const PORT = process.env.PORT || 4000;
 

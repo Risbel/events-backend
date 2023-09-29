@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
-import DiscoImages from "./DiscoImages";
+import DiscoImages from "./DiscoImage";
 import DiscoNetworks from "./DiscoNetworks";
 
 const DiscoDetail = sequelize.define("discoDetail", {
