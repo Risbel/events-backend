@@ -2,10 +2,11 @@ import { Request, Response } from "express";
 import Disco from "../models/Disco";
 import DiscoDetail from "../models/DiscoDetail";
 import DiscoRole from "../models/DiscoRole";
-import User from "../models/User";
 import Subscription from "../models/Subscription";
 import DiscoNetworks from "../models/DiscoNetworks";
 import DiscoImage from "../models/DiscoImage";
+import Permission from "../models/Permission";
+import Resource from "../models/Resource";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -86,11 +87,26 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       phone,
       email,
     });
-    await DiscoRole.bulkCreate([
+    const discoRoles = await DiscoRole.bulkCreate([
       { name: "user", discoId },
       { name: "moderator", discoId },
       { name: "admin", discoId },
     ]);
+
+    const permissions = await Permission.bulkCreate([
+      { name: "create" },
+      { name: "read" },
+      { name: "update" },
+      { name: "delete" },
+    ]);
+    const resources = await Resource.bulkCreate([
+      { name: "Users" },
+      { name: "Discos" },
+      { name: "discoImages" },
+      { name: "DiscoAdmissions" },
+    ]);
+
+    console.log(permissions, resources);
 
     return res.status(200).json({ disco: newDisco, details: detailsDisco });
   } catch (error: any) {

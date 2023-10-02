@@ -16,6 +16,9 @@ import "./models/Reservation";
 import "./models/AdmissionReservation";
 import "./models/ComboReservation";
 import "./models/DiscoRole";
+import "./models/Permission";
+import "./models/Resource";
+import "./models/rolePermissionResouce";
 import "./models/DiscoNetworks";
 import "./models/DiscoImage";
 
@@ -25,6 +28,7 @@ import discoRoutes from "./routes/discos.routes";
 import discoAdmisionsRoutes from "./routes/discoAdmisions.routes";
 import subscriptionsRoutes from "./routes/subscriptions.routes";
 import discoImagesRoutes from "./routes/discoImages.routes";
+import discoRolesRoutes from "./routes/discoRoles.routes";
 
 import config from "./config";
 import { createSuperAdmin } from "./utils/createSuperAdmin";
@@ -51,6 +55,7 @@ app.use("/api/discoAdmision", discoAdmisionsRoutes);
 app.use("/api", authRoutes);
 app.use("/api/subscription", subscriptionsRoutes);
 app.use("/api/discoImage", discoImagesRoutes);
+app.use("/api/discoRoles", discoRolesRoutes);
 
 const PORT = process.env.PORT || 4000;
 

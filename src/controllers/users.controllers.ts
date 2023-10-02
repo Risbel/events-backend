@@ -50,7 +50,7 @@ export const getUserByToken = async (req: Request, res: Response): Promise<Respo
     });
 
     if (!user) {
-      res.status(404).json({ message: "User does not exist" });
+      return res.status(404).json({ message: "User does not exist" });
     }
 
     return res.status(200).json(user);
