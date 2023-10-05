@@ -29,6 +29,9 @@ import discoAdmisionsRoutes from "./routes/discoAdmisions.routes";
 import subscriptionsRoutes from "./routes/subscriptions.routes";
 import discoImagesRoutes from "./routes/discoImages.routes";
 import discoRolesRoutes from "./routes/discoRoles.routes";
+import rolesPermissionsResources from "./routes/rolesPermissionsResources";
+import permissionsRoutes from "./routes/permissions.routes";
+import resourcesRoutes from "./routes/resources.routes";
 
 import config from "./config";
 import { createSuperAdmin } from "./utils/createSuperAdmin";
@@ -56,6 +59,9 @@ app.use("/api", authRoutes);
 app.use("/api/subscription", subscriptionsRoutes);
 app.use("/api/discoImage", discoImagesRoutes);
 app.use("/api/discoRoles", discoRolesRoutes);
+app.use("/api/rolesPermissionsResources", rolesPermissionsResources);
+app.use("/api/permission", permissionsRoutes);
+app.use("/api/resource", resourcesRoutes);
 
 const PORT = process.env.PORT || 4000;
 

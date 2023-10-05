@@ -17,7 +17,6 @@ const Permission = sequelize.define("Permission", {
 Permission.hasMany(rolePermissionResouce, {
   foreignKey: {
     name: "permissionId",
-    allowNull: false,
   },
   sourceKey: "id",
 });

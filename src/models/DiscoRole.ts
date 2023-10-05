@@ -29,7 +29,7 @@ Subscription.belongsTo(DiscoRole, {
 DiscoRole.hasMany(rolePermissionResouce, {
   foreignKey: {
     name: "discoRoleId",
-    allowNull: false,
+    allowNull: true,
   },
   sourceKey: "id",
 });
