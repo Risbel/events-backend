@@ -5,10 +5,13 @@ import { UserEntries } from "../types";
 import Reservation from "../models/Reservation";
 import appConfig from "../config";
 import { verify } from "jsonwebtoken";
+import Subscription from "../models/Subscription";
+import DiscoRole from "../models/DiscoRole";
+import Disco from "../models/Disco";
 
 export const getUsers = async (_req: Request, res: Response): Promise<Response> => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({ attributes: { exclude: ["password"] } });
     return res.json(users);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
@@ -23,6 +26,23 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
       where: {
         id,
       },
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Subscription,
+          include: [
+            {
+              model: DiscoRole,
+              attributes: { include: ["name", "id"] },
+            },
+            {
+              model: Disco,
+              attributes: { include: ["name", "id"] },
+            },
+          ],
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      ],
     });
 
     if (!user) {
@@ -37,9 +57,12 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
 
 export const getUserByToken = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { token } = req.params;
+    if (!req?.headers?.authorization) {
+      return res.status(401).json({ error: "No token provided" });
+    }
+    var cleanToken = req?.headers?.authorization.replace("Bearer ", "");
 
-    const decoded: any = verify(token, appConfig.secretSignJwt);
+    const decoded: any = verify(cleanToken, appConfig.secretSignJwt);
 
     const { id } = decoded;
 
@@ -55,7 +78,15 @@ export const getUserByToken = async (req: Request, res: Response): Promise<Respo
 
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error: "Internal server error" });
+    if (
+      error.name === "JsonWebTokenError" ||
+      error.message === "invalid signature" ||
+      error.message === "jwt expired"
+    ) {
+      return res.status(401).json(error.message);
+    }
+
+    return res.status(500).json({ error: error.message });
   }
 };
 

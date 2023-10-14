@@ -4,7 +4,7 @@ const router = Router();
 import { createDisco, getDisco, getDiscos, updateDisco, deleteDisco } from "../controllers/discos.controllers";
 import { verifyToken } from "../middlewares/authorization";
 
-router.get("/", [verifyToken], getDiscos);
+router.get("/", getDiscos);
 router.get("/:slug/:userId?", getDisco);
 router.post("/", createDisco);
 router.put("/:id", updateDisco);

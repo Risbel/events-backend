@@ -11,9 +11,9 @@ import {
   getUserByToken,
 } from "../controllers/users.controllers";
 
+router.get("/token", getUserByToken);
 router.get("/", getUsers);
 router.get("/:id", getUser);
-router.get("/token/:token", getUserByToken);
 router.get("/:id", getUserReservations);
 router.post("/", createUser);
 router.put("/:id", updateUser);

@@ -35,9 +35,6 @@ const User = sequelize.define("User", {
   imageUrl: {
     type: DataTypes.STRING,
   },
-  isSuperAdmin: {
-    type: DataTypes.BOOLEAN,
-  },
 });
 
 User.hasMany(Reservation, {

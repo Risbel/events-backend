@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import Subscription from "../models/Subscription";
 import DiscoRole from "../models/DiscoRole";
 import Disco from "../models/Disco";
+import rolePermissionResouce from "../models/rolePermissionResouce";
+import Permission from "../models/Permission";
+import Resource from "../models/Resource";
 
 export const getSubscriptions = async (_req: Request, res: Response) => {
   try {
@@ -24,6 +27,42 @@ export const getSubscriptionsByIdUser = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json(subscriptionByIdUser);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const getSubscriptionRolePermissions = async (req: Request, res: Response) => {
+  try {
+    const { userId, discoId } = req.params;
+
+    const myPermissions = await Subscription.findOne({
+      where: {
+        userId,
+        discoId,
+      },
+      include: [
+        {
+          model: DiscoRole,
+          include: [
+            {
+              model: rolePermissionResouce,
+              include: [
+                { model: Permission, attributes: ["name"] },
+                { model: Resource, attributes: ["name"] },
+              ],
+              attributes: ["permissionId", "resourceId"],
+            },
+          ],
+          attributes: ["id", "name"],
+        },
+      ],
+      attributes: ["id"],
+    });
+
+    
+
+    return res.status(200).json(myPermissions);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

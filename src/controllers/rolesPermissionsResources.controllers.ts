@@ -35,7 +35,7 @@ export const getPermissionsByRoleId = async (req: Request, res: Response) => {
     }));
 
     return res.status(200).json(permissionsData);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 };
@@ -50,7 +50,7 @@ export const getResourcesByPermissionId = async (req: Request, res: Response) =>
     });
 
     return res.status(200).json(resources);
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
 };
@@ -63,7 +63,7 @@ export const createRolesPermissionsResources = async (req: Request, res: Respons
     const newPermission = await rolePermissionResouce.create({ discoRoleId, permissionId, resourceId });
 
     return res.status(200).json({ newPermission });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };

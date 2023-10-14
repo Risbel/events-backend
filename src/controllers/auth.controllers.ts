@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { hash, compare } from "bcryptjs";
-import { sign } from "jsonwebtoken";
+import { sign, verify } from "jsonwebtoken";
 
 import User from "../models/User";
 import appConfig from "../config";
@@ -30,6 +30,7 @@ export const signup = async (req: Request, res: Response) => {
       email,
       phone,
       password: hashedPassword,
+      role: "user",
     });
 
     const token = sign(
@@ -90,7 +91,40 @@ export const login = async (req: Request, res: Response) => {
       },
       appConfig.secretSignJwt,
       {
-        expiresIn: 86400,
+        expiresIn: 1200,
+      }
+    );
+
+    const refreshToken = sign({ id: user.id }, appConfig.secretRefreshJwt, { expiresIn: 864000 });
+
+    return res.json({ status: true, accessToken: token, refreshToken: refreshToken });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const { refresh } = req.body;
+
+    const decoded: any = verify(refresh, appConfig.secretRefreshJwt);
+
+    const user: any = await User.findOne({ where: { id: decoded.id } });
+
+    if (!user) {
+      return res.status(401).json({ error: "User not found" });
+    }
+
+    const token = sign(
+      {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        image: user.imageUrl,
+      },
+      appConfig.secretSignJwt,
+      {
+        expiresIn: 1200,
       }
     );
 

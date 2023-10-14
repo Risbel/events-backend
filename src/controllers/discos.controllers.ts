@@ -10,7 +10,16 @@ import Resource from "../models/Resource";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
-    const discos = await Disco.findAll({ include: DiscoDetail });
+    const discos = await Disco.findAll({
+      include: [
+        {
+          model: DiscoDetail,
+          attributes: ["slug", "address", "description"],
+        },
+      ],
+      attributes: ["id", "logo", "name"],
+    });
+
     return res.json(discos);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
@@ -92,21 +101,6 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       { name: "moderator", discoId },
       { name: "admin", discoId },
     ]);
-
-    const permissions = await Permission.bulkCreate([
-      { name: "create" },
-      { name: "read" },
-      { name: "update" },
-      { name: "delete" },
-    ]);
-    const resources = await Resource.bulkCreate([
-      { name: "Users" },
-      { name: "Discos" },
-      { name: "discoImages" },
-      { name: "DiscoAdmissions" },
-    ]);
-
-    console.log(permissions, resources);
 
     return res.status(200).json({ disco: newDisco, details: detailsDisco });
   } catch (error: any) {
