@@ -67,3 +67,14 @@ export const createRolesPermissionsResources = async (req: Request, res: Respons
     res.status(500).json({ error: error.message });
   }
 };
+
+export const deleteRolePermissionResource = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    await rolePermissionResouce.destroy({ where: { id: id } });
+    return res.status(200).json({ message: "Permission on resource destroyed" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

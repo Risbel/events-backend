@@ -20,6 +20,9 @@ const Disco = sequelize.define("Disco", {
   logo: {
     type: DataTypes.STRING,
   },
+  slug: {
+    type: DataTypes.STRING,
+  },
 });
 
 Disco.hasOne(DiscoDetail, {

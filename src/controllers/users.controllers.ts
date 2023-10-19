@@ -77,7 +77,7 @@ export const getUserByToken = async (req: Request, res: Response): Promise<Respo
     }
 
     return res.status(200).json(user);
-  } catch (error) {
+  } catch (error: any) {
     if (
       error.name === "JsonWebTokenError" ||
       error.message === "invalid signature" ||

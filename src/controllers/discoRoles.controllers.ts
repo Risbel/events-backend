@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import Disco from "../models/Disco";
 import DiscoRole from "../models/DiscoRole";
 import rolePermissionResouce from "../models/rolePermissionResouce";
+import Permission from "../models/Permission";
+import Resource from "../models/Resource";
 
 export const getDiscoRoles = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -14,7 +16,30 @@ export const getDiscoRoles = async (_req: Request, res: Response): Promise<Respo
       ],
     });
 
-    return res.json(discoRoles);
+    return res.status(200).json(discoRoles);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getDiscoRoleBySlug = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    console.log(req.params);
+    const { slug } = req.params;
+
+    const discoRole = await Disco.findOne({
+      where: { slug },
+      include: [
+        {
+          model: DiscoRole,
+          include: [
+            { model: rolePermissionResouce, include: [{ model: Permission }, { model: Resource }], required: false },
+          ],
+        },
+      ],
+    });
+
+    return res.status(200).json(discoRole);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }

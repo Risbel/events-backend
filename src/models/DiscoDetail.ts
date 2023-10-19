@@ -25,10 +25,6 @@ const DiscoDetail = sequelize.define("discoDetail", {
   administrator: {
     type: DataTypes.STRING,
   },
-  slug: {
-    type: DataTypes.STRING,
-    unique: true,
-  },
   phone: {
     type: DataTypes.STRING,
     unique: true,

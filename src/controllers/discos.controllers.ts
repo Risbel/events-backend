@@ -14,15 +14,17 @@ export const getDiscos = async (_req: Request, res: Response): Promise<Response>
       include: [
         {
           model: DiscoDetail,
-          attributes: ["slug", "address", "description"],
+          attributes: ["address", "description"],
         },
       ],
-      attributes: ["id", "logo", "name"],
+      attributes: ["id", "logo", "name", "slug"],
     });
 
     return res.json(discos);
   } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 };
 
@@ -31,12 +33,13 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
     const { slug, userId } = req.params;
 
     const disco: any = await Disco.findOne({
+      where: {
+        slug: slug,
+      },
       include: [
         {
           model: DiscoDetail,
-          where: {
-            slug: slug,
-          },
+
           include: [
             {
               model: DiscoNetworks,
