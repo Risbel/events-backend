@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
 import DiscoDetail from "./DiscoDetail";
-import DiscoAdmission from "./DiscoAdmission";
+import DiscoTicket from "./DiscoTicket";
 import Subscription from "./Subscription";
 import Combo from "./Combo";
 import DiscoRole from "./DiscoRole";
@@ -37,14 +37,14 @@ DiscoDetail.belongsTo(Disco, {
   targetKey: "id",
 });
 
-Disco.hasMany(DiscoAdmission, {
+Disco.hasMany(DiscoTicket, {
   foreignKey: {
     name: "discoId",
     allowNull: false,
   },
   sourceKey: "id",
 });
-DiscoAdmission.belongsTo(Disco, {
+DiscoTicket.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
 });
