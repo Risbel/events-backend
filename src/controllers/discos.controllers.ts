@@ -5,8 +5,6 @@ import DiscoRole from "../models/DiscoRole";
 import Subscription from "../models/Subscription";
 import DiscoNetworks from "../models/DiscoNetworks";
 import DiscoImage from "../models/DiscoImage";
-import Permission from "../models/Permission";
-import Resource from "../models/Resource";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -76,6 +74,21 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
     return res.status(200).json({ disco: disco });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
+  }
+};
+
+export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+
+    const disco = await Disco.findOne({
+      where: { id: id },
+      include: [{ model: DiscoRole }],
+    });
+
+    return res.status(200).json(disco);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
   }
 };
 

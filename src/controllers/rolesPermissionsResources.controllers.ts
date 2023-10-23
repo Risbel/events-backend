@@ -74,7 +74,7 @@ export const deleteRolePermissionResource = async (req: Request, res: Response) 
 
     await rolePermissionResouce.destroy({ where: { id: id } });
     return res.status(200).json({ message: "Permission on resource destroyed" });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };

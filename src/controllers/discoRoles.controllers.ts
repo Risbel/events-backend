@@ -24,7 +24,6 @@ export const getDiscoRoles = async (_req: Request, res: Response): Promise<Respo
 
 export const getDiscoRoleBySlug = async (req: Request, res: Response): Promise<Response> => {
   try {
-    console.log(req.params);
     const { slug } = req.params;
 
     const discoRole = await Disco.findOne({

@@ -45,15 +45,13 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
 export const updateDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { price, description, category, quantity } = req.body;
+
+    const { price, description, quantity } = req.body;
 
     const discoTicket: any = await DiscoTicket.findOne({
-      where: { discoId: id },
+      where: { id: id },
     });
-    (discoTicket.price = price),
-      (discoTicket.description = description),
-      (discoTicket.category = category),
-      (discoTicket.quantity = quantity);
+    (discoTicket.price = price), (discoTicket.description = description), (discoTicket.quantity = quantity);
 
     const newDiscoTicket = await discoTicket.save();
 
@@ -68,10 +66,10 @@ export const deleteDiscoTicket = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     await DiscoTicket.destroy({
-      where: { discoId: id },
+      where: { id: id },
     });
 
-    res.status(200).json({ message: "DiscoTicket deleted successfuly" });
+    return res.status(204).json({ message: "Deleted successfully" });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

@@ -60,8 +60,6 @@ export const getSubscriptionRolePermissions = async (req: Request, res: Response
       attributes: ["id"],
     });
 
-    
-
     return res.status(200).json(myPermissions);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
@@ -83,6 +81,30 @@ export const createSubscription = async (req: Request, res: Response) => {
       userId: id,
       roleId,
     });
+
+    return res.status(200).json(newSubscription);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateSubscription = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { roleId } = req.body;
+
+    console.log("parametros", req.params);
+
+    console.log("cuerpo", req.body);
+
+    const subscription: any = await Subscription.findByPk(id);
+    if (!subscription) {
+      return res.status(404).json({ error: "No se encontró la suscripción" });
+    }
+
+    subscription.roleId = roleId;
+
+    const newSubscription = await subscription.save();
 
     return res.status(200).json(newSubscription);
   } catch (error: any) {
