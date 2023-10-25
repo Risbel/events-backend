@@ -7,10 +7,12 @@ import {
   createDiscoTicket,
   updateDiscoTicket,
   deleteDiscoTicket,
+  getTicketById,
 } from "../controllers/discoTickets.controllers";
 
 router.get("/", getTickets);
-router.get("/:id", getTicketsByIdDisco);
+router.get("/disco/:id", getTicketsByIdDisco);
+router.get("/:id", getTicketById);
 router.post("/:id", createDiscoTicket);
 router.put("/:id", updateDiscoTicket);
 router.delete("/:id", deleteDiscoTicket);

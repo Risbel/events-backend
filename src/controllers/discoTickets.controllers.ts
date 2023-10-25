@@ -23,6 +23,21 @@ export const getTicketsByIdDisco = async (req: Request, res: Response) => {
   }
 };
 
+export const getTicketById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const discoTicket = await DiscoTicket.findByPk(id, { include: Disco });
+    if (discoTicket === null) {
+      return res.status(404).json({ message: "This ticket does not exist" });
+    }
+
+    return res.status(200).json(discoTicket);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 export const createDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;

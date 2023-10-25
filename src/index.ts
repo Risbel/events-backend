@@ -54,7 +54,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/user", usersRoutes);
 app.use("/api/disco", discoRoutes);
-app.use("/api/discoTickets", discoTicketsRoutes);
+app.use("/api/discoTicket", discoTicketsRoutes);
 app.use("/api", authRoutes);
 app.use("/api/subscription", subscriptionsRoutes);
 app.use("/api/discoImage", discoImagesRoutes);

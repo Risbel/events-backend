@@ -53,7 +53,7 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
     });
 
     if (!disco) {
-      res.status(404).json({ message: "Disco does not exist" });
+      return res.status(404).json({ message: "The disco does not exist" });
     }
 
     if (userId) {
