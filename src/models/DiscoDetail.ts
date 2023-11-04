@@ -2,6 +2,8 @@ import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
 import DiscoImages from "./DiscoImage";
 import DiscoNetworks from "./DiscoNetworks";
+import DiscoPhone from "./DiscoPhone";
+import DiscoBankCard from "./UserBankCard";
 
 const DiscoDetail = sequelize.define("discoDetail", {
   id: {
@@ -25,14 +27,6 @@ const DiscoDetail = sequelize.define("discoDetail", {
   administrator: {
     type: DataTypes.STRING,
   },
-  phone: {
-    type: DataTypes.STRING,
-    unique: true,
-  },
-  email: {
-    type: DataTypes.STRING,
-    unique: true,
-  },
 });
 
 DiscoDetail.hasMany(DiscoImages, {
@@ -50,12 +44,23 @@ DiscoImages.belongsTo(DiscoDetail, {
 
 DiscoDetail.hasMany(DiscoNetworks, {
   foreignKey: {
-    name: "discoId",
+    name: "discoDetailId",
   },
   sourceKey: "id",
 });
 DiscoNetworks.belongsTo(DiscoDetail, {
-  foreignKey: "discoId",
+  foreignKey: "discoDetailId",
+  targetKey: "id",
+});
+
+DiscoDetail.hasMany(DiscoPhone, {
+  foreignKey: {
+    name: "discoDetailId",
+  },
+  sourceKey: "id",
+});
+DiscoPhone.belongsTo(DiscoDetail, {
+  foreignKey: "discoDetailId",
   targetKey: "id",
 });
 

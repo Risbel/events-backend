@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
 import TicketsReservation from "./TicketsReservation";
+import TicketImages from "./TicketImages";
 
 const DiscoTicket = sequelize.define("DiscoTicket", {
   id: {
@@ -11,13 +12,16 @@ const DiscoTicket = sequelize.define("DiscoTicket", {
   price: {
     type: DataTypes.DECIMAL,
   },
+  shortDescription: {
+    type: DataTypes.STRING,
+  },
   description: {
     type: DataTypes.STRING,
   },
   category: {
     type: DataTypes.STRING,
   },
-  quantity: {
+  countInStock: {
     type: DataTypes.INTEGER,
   },
 });
@@ -32,6 +36,16 @@ DiscoTicket.hasMany(TicketsReservation, {
   sourceKey: "id",
 });
 TicketsReservation.belongsTo(DiscoTicket, {
+  foreignKey: "discoTicketId",
+  targetKey: "id",
+});
+
+DiscoTicket.hasMany(TicketImages, {
+  foreignKey: "discoTicketId",
+  sourceKey: "id",
+});
+
+TicketImages.belongsTo(DiscoTicket, {
   foreignKey: "discoTicketId",
   targetKey: "id",
 });

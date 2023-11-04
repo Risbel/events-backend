@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import DiscoTicket from "../models/DiscoTicket";
 import Disco from "../models/Disco";
+import TicketImages from "../models/TicketImages";
+import DiscoBankCard from "../models/UserBankCard";
+import DiscoDetail from "../models/DiscoDetail";
 
 export const getTickets = async (_req: Request, res: Response) => {
   try {
@@ -27,7 +30,12 @@ export const getTicketById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const discoTicket = await DiscoTicket.findByPk(id, { include: Disco });
+    const discoTicket = await DiscoTicket.findByPk(id, {
+      include: [
+        { model: Disco, include: [{ model: DiscoDetail, include: [{ model: DiscoBankCard }] }] },
+        { model: TicketImages },
+      ],
+    });
     if (discoTicket === null) {
       return res.status(404).json({ message: "This ticket does not exist" });
     }
@@ -41,17 +49,25 @@ export const getTicketById = async (req: Request, res: Response) => {
 export const createDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { price, description, category, quantity } = req.body;
+    const { price, shortDescription, description, category, countInStock, image, imageText } = req.body;
 
-    const newDiscoTicket = await DiscoTicket.create({
+    const newDiscoTicket: any = await DiscoTicket.create({
       discoId: id,
       price,
+      shortDescription,
       description,
       category,
-      quantity,
+      countInStock,
+    });
+    const ticketId = newDiscoTicket.id;
+
+    const ticketImage = await TicketImages.create({
+      image,
+      imageText,
+      discoTicketId: ticketId,
     });
 
-    return res.status(200).json(newDiscoTicket);
+    return res.status(200).json({ ticket: newDiscoTicket, image: ticketImage });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
@@ -61,12 +77,12 @@ export const updateDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const { price, description, quantity } = req.body;
+    const { price, description, countInStock } = req.body;
 
     const discoTicket: any = await DiscoTicket.findOne({
       where: { id: id },
     });
-    (discoTicket.price = price), (discoTicket.description = description), (discoTicket.quantity = quantity);
+    (discoTicket.price = price), (discoTicket.description = description), (discoTicket.countInStock = countInStock);
 
     const newDiscoTicket = await discoTicket.save();
 

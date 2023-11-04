@@ -12,7 +12,7 @@ export const createSuperAdmin = async () => {
         name: "Risbel",
         lastName: "Suarez",
         email: "risbel961019@gmail.com",
-        phone: "+5354353930",
+        phone: "+53 54353930",
         password: hashedPassword,
         isSuperAdmin: true,
       });

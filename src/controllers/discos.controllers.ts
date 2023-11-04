@@ -5,6 +5,9 @@ import DiscoRole from "../models/DiscoRole";
 import Subscription from "../models/Subscription";
 import DiscoNetworks from "../models/DiscoNetworks";
 import DiscoImage from "../models/DiscoImage";
+import DiscoBankCard from "../models/UserBankCard";
+import DiscoPhone from "../models/DiscoPhone";
+import User from "../models/User";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -45,6 +48,10 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
             },
             {
               model: DiscoImage,
+              required: false,
+            },
+            {
+              model: DiscoPhone,
               required: false,
             },
           ],
@@ -94,23 +101,28 @@ export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Re
 
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, phone, email } = req.body;
+    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, phone, bankCardNumber } =
+      req.body;
 
     const newDisco: any = await Disco.create({
       name,
       logo,
+      slug,
     });
     const discoId = newDisco.id;
-    const detailsDisco = await DiscoDetail.create({
+    const detailsDisco: any = await DiscoDetail.create({
       discoId,
       administrator,
       description,
       largeDescription,
       bgImage,
       address,
-      slug,
       phone,
-      email,
+    });
+
+    const userBankCard = await User.create({
+      number: bankCardNumber,
+      userId: detailsDisco.administrator,
     });
     const discoRoles = await DiscoRole.bulkCreate([
       { name: "user", discoId },
