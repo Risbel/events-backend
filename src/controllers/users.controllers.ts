@@ -8,6 +8,7 @@ import { verify } from "jsonwebtoken";
 import Subscription from "../models/Subscription";
 import DiscoRole from "../models/DiscoRole";
 import Disco from "../models/Disco";
+import UserBankCard from "../models/UserBankCard";
 
 export const getUsers = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -41,6 +42,9 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
             },
           ],
           attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+        {
+          model: UserBankCard,
         },
       ],
     });

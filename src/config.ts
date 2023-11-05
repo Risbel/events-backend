@@ -8,11 +8,7 @@ const db = {
   port: process.env.DB_PORT,
   database: process.env.DB_DATABASE,
 
-  instance_user: process.env.DB_INSTANCE_USER,
-  instance_password: process.env.DB_INSTANCE_PASSWORD,
-  instance_host: process.env.DB_INSTANCE_HOST,
-  instance_port: process.env.DB_INSTANCE_PORT,
-  instance_name: process.env.DB_INSTANCE_NAME,
+  conectionString: process.env.DB_URL,
 };
 
 const originAllowed = process.env.URL_ALLOWED_CLIENT;

@@ -3,7 +3,6 @@ import sequelize from "../database/database";
 import DiscoImages from "./DiscoImage";
 import DiscoNetworks from "./DiscoNetworks";
 import DiscoPhone from "./DiscoPhone";
-import DiscoBankCard from "./UserBankCard";
 
 const DiscoDetail = sequelize.define("discoDetail", {
   id: {
@@ -23,9 +22,6 @@ const DiscoDetail = sequelize.define("discoDetail", {
   address: {
     type: DataTypes.STRING,
     unique: true,
-  },
-  administrator: {
-    type: DataTypes.STRING,
   },
 });
 

@@ -25,6 +25,7 @@ import "./models/DiscoImage";
 import usersRoutes from "./routes/users.routes";
 import authRoutes from "./routes/auth.routes";
 import discoRoutes from "./routes/discos.routes";
+import discoDetailsRoutes from "./routes/discoDetails.routes";
 import discoTicketsRoutes from "./routes/discoTickets.routes";
 import subscriptionsRoutes from "./routes/subscriptions.routes";
 import discoImagesRoutes from "./routes/discoImages.routes";
@@ -54,6 +55,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/user", usersRoutes);
 app.use("/api/disco", discoRoutes);
+app.use("/api/discoDetail", discoDetailsRoutes);
 app.use("/api/discoTicket", discoTicketsRoutes);
 app.use("/api", authRoutes);
 app.use("/api/subscription", subscriptionsRoutes);

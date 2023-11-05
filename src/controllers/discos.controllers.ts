@@ -5,9 +5,9 @@ import DiscoRole from "../models/DiscoRole";
 import Subscription from "../models/Subscription";
 import DiscoNetworks from "../models/DiscoNetworks";
 import DiscoImage from "../models/DiscoImage";
-import DiscoBankCard from "../models/UserBankCard";
 import DiscoPhone from "../models/DiscoPhone";
 import User from "../models/User";
+import UserBankCard from "../models/UserBankCard";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -40,7 +40,6 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
       include: [
         {
           model: DiscoDetail,
-
           include: [
             {
               model: DiscoNetworks,
@@ -52,6 +51,10 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
             },
             {
               model: DiscoPhone,
+              required: false,
+            },
+            {
+              model: UserBankCard,
               required: false,
             },
           ],
@@ -109,6 +112,11 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       logo,
       slug,
     });
+
+    const userBankCard: any = await User.create({
+      number: bankCardNumber,
+      userId: administrator,
+    });
     const discoId = newDisco.id;
     const detailsDisco: any = await DiscoDetail.create({
       discoId,
@@ -118,12 +126,9 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bgImage,
       address,
       phone,
+      userBankCardId: userBankCard.id,
     });
 
-    const userBankCard = await User.create({
-      number: bankCardNumber,
-      userId: detailsDisco.administrator,
-    });
     const discoRoles = await DiscoRole.bulkCreate([
       { name: "user", discoId },
       { name: "moderator", discoId },
@@ -139,7 +144,8 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 export const updateDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params;
-    const { name, logo, slug, administrator, description, largeDescription, bgImage, address, phone, email } = req.body;
+    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, phone, userBankCardId } =
+      req.body;
 
     const disco: any = await Disco.findByPk(id);
     const discoDetails: any = await DiscoDetail.findOne({
@@ -154,12 +160,31 @@ export const updateDisco = async (req: Request, res: Response): Promise<Response
     discoDetails.bgImage = bgImage;
     discoDetails.address = address;
     discoDetails.phone = phone;
-    discoDetails.email = email;
+    discoDetails.userBankCardId = userBankCardId;
 
     const newDisco = await disco.save();
     const details = await discoDetails.save();
 
     return res.status(200).json({ disco: newDisco, details: details });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateBankCard = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+    const { userBankCardId } = req.body;
+
+    const discoDetails: any = await DiscoDetail.findOne({
+      where: { discoId: id },
+    });
+
+    discoDetails.userBankCardId = userBankCardId;
+
+    const newDiscoBankCard = await discoDetails.save();
+
+    return res.status(200).json(newDiscoBankCard);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
