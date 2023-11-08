@@ -11,7 +11,8 @@ const db = {
   conectionString: process.env.DB_URL,
 };
 
-const originAllowed = process.env.URL_ALLOWED_CLIENT;
+const originAllowedDev = process.env.URL_ALLOWED_CLIENT_DEV;
+const originAllowedPro = process.env.URL_ALLOWED_CLIENT_PRO;
 
 const secretSignJwt: any = process.env.SECRET_SIGNATURE;
 
@@ -19,7 +20,8 @@ const secretRefreshJwt: any = process.env.SECRET_REFRESH_JWT;
 
 const appConfig = {
   db,
-  originAllowed,
+  originAllowedDev,
+  originAllowedPro,
   secretSignJwt,
   secretRefreshJwt,
 };

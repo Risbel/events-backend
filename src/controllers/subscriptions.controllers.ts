@@ -93,10 +93,6 @@ export const updateSubscription = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { roleId } = req.body;
 
-    console.log("parametros", req.params);
-
-    console.log("cuerpo", req.body);
-
     const subscription: any = await Subscription.findByPk(id);
     if (!subscription) {
       return res.status(404).json({ error: "No se encontró la suscripción" });

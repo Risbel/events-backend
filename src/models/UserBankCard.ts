@@ -11,6 +11,9 @@ const UserBankCard = sequelize.define("userBankCard", {
   number: {
     type: DataTypes.STRING,
   },
+  name: {
+    type: DataTypes.STRING,
+  },
 });
 
 UserBankCard.hasOne(DiscoDetail, {

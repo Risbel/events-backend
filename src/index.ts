@@ -23,6 +23,7 @@ import "./models/DiscoNetworks";
 import "./models/DiscoImage";
 
 import usersRoutes from "./routes/users.routes";
+import userBankCardRoutes from "./routes/userBankCards.routes";
 import authRoutes from "./routes/auth.routes";
 import discoRoutes from "./routes/discos.routes";
 import discoDetailsRoutes from "./routes/discoDetails.routes";
@@ -37,13 +38,13 @@ import resourcesRoutes from "./routes/resources.routes";
 import config from "./config";
 import { createSuperAdmin } from "./utils/createSuperAdmin";
 
-const { originAllowed }: any = config;
+const { originAllowedDev, originAllowedPro }: any = config;
 
 const app = express();
 
 app.use(
   cors({
-    origin: [originAllowed],
+    origin: [originAllowedPro, originAllowedDev],
     credentials: true,
   })
 );
@@ -54,6 +55,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/user", usersRoutes);
+app.use("/api/userBankCard", userBankCardRoutes);
 app.use("/api/disco", discoRoutes);
 app.use("/api/discoDetail", discoDetailsRoutes);
 app.use("/api/discoTicket", discoTicketsRoutes);
