@@ -173,10 +173,11 @@ export const updateDisco = async (req: Request, res: Response): Promise<Response
 
 export const updateBankCard = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { userBankCardId } = req.params;
+    const { id } = req.params;
+    const { userBankCardId } = req.body;
 
     const discoDetails: any = await DiscoDetail.findOne({
-      where: { userBankCardId: userBankCardId },
+      where: { id: id },
     });
 
     discoDetails.userBankCardId = userBankCardId;
