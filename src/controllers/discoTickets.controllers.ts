@@ -49,15 +49,16 @@ export const getTicketById = async (req: Request, res: Response) => {
 export const createDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { price, shortDescription, description, category, countInStock, image, imageText } = req.body;
+    const { price, shortDescription, largeDescription, category, countInStock, image, imageText, expDate } = req.body;
 
     const newDiscoTicket: any = await DiscoTicket.create({
       discoId: id,
       price,
       shortDescription,
-      description,
+      largeDescription,
       category,
       countInStock,
+      expDate,
     });
     const ticketId = newDiscoTicket.id;
 
@@ -77,12 +78,14 @@ export const updateDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const { price, description, countInStock } = req.body;
+    const { price, shortDescription, countInStock } = req.body;
 
     const discoTicket: any = await DiscoTicket.findOne({
       where: { id: id },
     });
-    (discoTicket.price = price), (discoTicket.description = description), (discoTicket.countInStock = countInStock);
+    (discoTicket.price = price),
+      (discoTicket.shortDescription = shortDescription),
+      (discoTicket.countInStock = countInStock);
 
     const newDiscoTicket = await discoTicket.save();
 

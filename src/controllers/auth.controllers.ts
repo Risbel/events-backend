@@ -42,7 +42,7 @@ export const signup = async (req: Request, res: Response) => {
       },
       appConfig.secretSignJwt,
       {
-        expiresIn: 86400,
+        expiresIn: 43200,
       }
     );
 
@@ -91,11 +91,11 @@ export const login = async (req: Request, res: Response) => {
       },
       appConfig.secretSignJwt,
       {
-        expiresIn: 86400,
+        expiresIn: 43200,
       }
     );
 
-    const refreshToken = sign({ id: user.id }, appConfig.secretRefreshJwt, { expiresIn: 864000 });
+    const refreshToken = sign({ id: user.id }, appConfig.secretRefreshJwt, { expiresIn: 86400 });
 
     return res.json({ status: true, accessToken: token, refreshToken: refreshToken });
   } catch (error) {
@@ -125,7 +125,7 @@ export const refreshToken = async (req: Request, res: Response) => {
         },
         appConfig.secretSignJwt,
         {
-          expiresIn: 86400,
+          expiresIn: 43200,
         }
       );
 

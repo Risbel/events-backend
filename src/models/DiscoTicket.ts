@@ -15,7 +15,7 @@ const DiscoTicket = sequelize.define("DiscoTicket", {
   shortDescription: {
     type: DataTypes.STRING,
   },
-  description: {
+  largeDescription: {
     type: DataTypes.STRING,
   },
   category: {
@@ -23,6 +23,9 @@ const DiscoTicket = sequelize.define("DiscoTicket", {
   },
   countInStock: {
     type: DataTypes.INTEGER,
+  },
+  expDate: {
+    type: DataTypes.DATE,
   },
 });
 

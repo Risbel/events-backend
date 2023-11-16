@@ -16,7 +16,7 @@ const UserBankCard = sequelize.define("userBankCard", {
   },
 });
 
-UserBankCard.hasOne(DiscoDetail, {
+UserBankCard.hasMany(DiscoDetail, {
   foreignKey: { name: "userBankCardId", allowNull: true },
   sourceKey: "id",
 });
