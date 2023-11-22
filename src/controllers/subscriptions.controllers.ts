@@ -20,7 +20,7 @@ export const getSubscriptionsByIdUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const subscriptionByIdUser = await Subscription.findAll({ where: { userId: id }, include: { model: Disco } });
+    const subscriptionByIdUser = await Subscription.findAll({ where: { userId: id }, include: [Disco, DiscoRole] });
 
     if (!subscriptionByIdUser) {
       return res.status(404).json({ message: "Subscriptions not found" });

@@ -4,6 +4,7 @@ import Disco from "../models/Disco";
 import TicketImages from "../models/TicketImages";
 import DiscoBankCard from "../models/UserBankCard";
 import DiscoDetail from "../models/DiscoDetail";
+import TicketsReservation from "../models/TicketsReservation";
 
 export const getTickets = async (_req: Request, res: Response) => {
   try {
@@ -19,7 +20,10 @@ export const getTicketsByIdDisco = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const ticketsByDisco = await DiscoTicket.findAll({ where: { discoId: id } });
+    const ticketsByDisco = await DiscoTicket.findAll({
+      where: { discoId: id },
+      include: { model: TicketsReservation, attributes: ["id", "quantity"] },
+    });
     return res.status(200).json(ticketsByDisco);
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
