@@ -28,6 +28,7 @@ import authRoutes from "./routes/auth.routes";
 import discoRoutes from "./routes/discos.routes";
 import discoDetailsRoutes from "./routes/discoDetails.routes";
 import discoTicketsRoutes from "./routes/discoTickets.routes";
+import comboRoutes from "./routes/combos.routes";
 import reservationRoutes from "./routes/reservations.routes";
 import subscriptionsRoutes from "./routes/subscriptions.routes";
 import discoImagesRoutes from "./routes/discoImages.routes";
@@ -42,6 +43,7 @@ import { createSuperAdmin } from "./utils/createSuperAdmin";
 const { originAllowedDev, originAllowedPro }: any = config;
 
 const app = express();
+var bodyParser = require("body-parser");
 
 app.use(
   cors({
@@ -52,14 +54,17 @@ app.use(
 
 app.use(cookieParser());
 app.use(morgan("dev")); //muestra por consola en modo desarrollo las solicitudes y errores n casos de fallos
+
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 app.use("/api/user", usersRoutes);
 app.use("/api/userBankCard", userBankCardRoutes);
 app.use("/api/disco", discoRoutes);
 app.use("/api/discoDetail", discoDetailsRoutes);
 app.use("/api/discoTicket", discoTicketsRoutes);
+app.use("/api/combo", comboRoutes);
 app.use("/api/reservation", reservationRoutes);
 app.use("/api", authRoutes);
 app.use("/api/subscription", subscriptionsRoutes);
