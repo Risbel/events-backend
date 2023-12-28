@@ -4,6 +4,9 @@ import ComboDetail from "../models/ComboDetail";
 import ComboReservation from "../models/ComboReservation";
 import cloudinary from "../utils/cloudinary";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
+import Disco from "../models/Disco";
+import DiscoDetail from "../models/DiscoDetail";
+import UserBankCard from "../models/UserBankCard";
 
 export const getCombos = async (req: Request, res: Response) => {
   try {
@@ -20,7 +23,11 @@ export const getComboByDiscoId = async (req: Request, res: Response) => {
 
     const combosByDiscoId = await Combo.findAll({
       where: { discoId: discoId },
-      include: [ComboDetail, ComboReservation],
+      include: [
+        ComboDetail,
+        ComboReservation,
+        { model: Disco, include: [{ model: DiscoDetail, include: [{ model: UserBankCard }] }] },
+      ],
     });
 
     return res.status(200).json(combosByDiscoId);
@@ -32,7 +39,7 @@ export const getComboByDiscoId = async (req: Request, res: Response) => {
 export const createCombo = async (req: any, res: Response) => {
   try {
     const { discoId } = req.params;
-    const { price, countInStock, description } = req.body;
+    const { price, countInStock, description, category } = req.body;
 
     const file64: any = formatBufferTo64(req.file);
 
@@ -41,6 +48,7 @@ export const createCombo = async (req: any, res: Response) => {
     const newCombo: any = await Combo.create({
       discoId,
       price,
+      category,
       countInStock,
     });
 
