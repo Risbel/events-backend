@@ -39,6 +39,7 @@ import resourcesRoutes from "./routes/resources.routes";
 
 import config from "./config";
 import { createSuperAdmin } from "./utils/createSuperAdmin";
+import { createPermissionsResources } from "./utils/createPermissionsResources";
 
 const { originAllowedDev, originAllowedPro }: any = config;
 
@@ -81,6 +82,7 @@ async function main() {
     await sequelize.sync({ alter: true, logging: false });
 
     await createSuperAdmin();
+    await createPermissionsResources();
     app.listen(PORT, () => {
       console.log("server on port", PORT);
     });
