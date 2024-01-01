@@ -36,7 +36,7 @@ export const getComboByDiscoId = async (req: Request, res: Response) => {
   }
 };
 
-export const createCombo = async (req: any, res: Response) => {
+export const createCombo = async (req: Request, res: Response) => {
   try {
     const { discoId } = req.params;
     const { price, countInStock, description, category } = req.body;

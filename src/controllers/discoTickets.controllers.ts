@@ -5,6 +5,8 @@ import TicketImages from "../models/TicketImages";
 import DiscoBankCard from "../models/UserBankCard";
 import DiscoDetail from "../models/DiscoDetail";
 import TicketsReservation from "../models/TicketsReservation";
+import { formatBufferTo64 } from "../utils/formatBufferTo64";
+import cloudinary from "../utils/cloudinary";
 
 export const getTickets = async (_req: Request, res: Response) => {
   try {
@@ -53,7 +55,11 @@ export const getTicketById = async (req: Request, res: Response) => {
 export const createDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { price, shortDescription, largeDescription, category, countInStock, image, imageText, expDate } = req.body;
+    const { price, shortDescription, largeDescription, category, countInStock, expDate } = req.body;
+
+    const file64: any = req.file ? formatBufferTo64(req.file) : null;
+
+    const result = file64 ? await cloudinary.uploader.upload(file64.content) : null;
 
     const newDiscoTicket: any = await DiscoTicket.create({
       discoId: id,
@@ -66,11 +72,13 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
     });
     const ticketId = newDiscoTicket.id;
 
-    const ticketImage = await TicketImages.create({
-      image,
-      imageText,
-      discoTicketId: ticketId,
-    });
+    const ticketImage = result
+      ? await TicketImages.create({
+          imageText: shortDescription,
+          discoTicketId: ticketId,
+          image: result.secure_url,
+        })
+      : null;
 
     return res.status(200).json({ ticket: newDiscoTicket, image: ticketImage });
   } catch (error: any) {
@@ -102,6 +110,10 @@ export const updateDiscoTicket = async (req: Request, res: Response) => {
 export const deleteDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+
+    await TicketImages.destroy({
+      where: { discoTicketId: id },
+    });
 
     await DiscoTicket.destroy({
       where: { id: id },

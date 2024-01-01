@@ -9,11 +9,12 @@ import {
   deleteDiscoTicket,
   getTicketById,
 } from "../controllers/discoTickets.controllers";
+import upload from "../utils/multer";
 
 router.get("/", getTickets);
 router.get("/disco/:id", getTicketsByIdDisco);
 router.get("/:id", getTicketById);
-router.post("/:id", createDiscoTicket);
+router.post("/:id", upload.single("image"), createDiscoTicket);
 router.put("/:id", updateDiscoTicket);
 router.delete("/:id", deleteDiscoTicket);
 

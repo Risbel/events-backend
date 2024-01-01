@@ -104,7 +104,7 @@ export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Re
 
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, phone, bankCardNumber } =
+    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, bankCardNumber } =
       req.body;
 
     const newDisco: any = await Disco.create({
@@ -113,7 +113,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       slug,
     });
 
-    const userBankCard: any = await User.create({
+    const userBankCard: any = await UserBankCard.create({
       number: bankCardNumber,
       userId: administrator,
     });
@@ -125,7 +125,6 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       largeDescription,
       bgImage,
       address,
-      phone,
       userBankCardId: userBankCard.id,
     });
 
