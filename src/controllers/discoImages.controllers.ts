@@ -26,3 +26,17 @@ export const createDiscoImage = async (req: Request, res: Response): Promise<Res
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const deleteDiscoImage = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { id } = req.params;
+
+    await DiscoImage.destroy({
+      where: { id },
+    });
+
+    return res.status(204).json({ message: "Deleted successfully" });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
