@@ -71,7 +71,7 @@ DiscoBannerImage.belongsTo(DiscoDetail, {
   targetKey: "id",
 });
 
-DiscoDetail.hasMany(DiscoColor, {
+DiscoDetail.hasOne(DiscoColor, {
   foreignKey: "discoDetailId",
   sourceKey: "id",
 });

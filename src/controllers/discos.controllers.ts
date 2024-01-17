@@ -8,6 +8,7 @@ import DiscoImage from "../models/DiscoImage";
 import DiscoPhone from "../models/DiscoPhone";
 import User from "../models/User";
 import UserBankCard from "../models/UserBankCard";
+import DiscoColor from "../models/DiscoColor";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -55,6 +56,10 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
             },
             {
               model: UserBankCard,
+              required: false,
+            },
+            {
+              model: DiscoColor,
               required: false,
             },
           ],
