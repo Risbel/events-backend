@@ -3,6 +3,8 @@ import sequelize from "../database/database";
 import DiscoImages from "./DiscoImage";
 import DiscoNetworks from "./DiscoNetworks";
 import DiscoPhone from "./DiscoPhone";
+import DiscoBannerImage from "./DiscoBannerImage";
+import DiscoColor from "./DiscoColor";
 
 const DiscoDetail = sequelize.define("discoDetail", {
   id: {
@@ -56,6 +58,24 @@ DiscoDetail.hasMany(DiscoPhone, {
   sourceKey: "id",
 });
 DiscoPhone.belongsTo(DiscoDetail, {
+  foreignKey: "discoDetailId",
+  targetKey: "id",
+});
+
+DiscoDetail.hasMany(DiscoBannerImage, {
+  foreignKey: "discoDetailId",
+  sourceKey: "id",
+});
+DiscoBannerImage.belongsTo(DiscoDetail, {
+  foreignKey: "discoDetailId",
+  targetKey: "id",
+});
+
+DiscoDetail.hasMany(DiscoColor, {
+  foreignKey: "discoDetailId",
+  sourceKey: "id",
+});
+DiscoColor.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
 });
