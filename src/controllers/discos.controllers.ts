@@ -9,6 +9,7 @@ import DiscoPhone from "../models/DiscoPhone";
 import User from "../models/User";
 import UserBankCard from "../models/UserBankCard";
 import DiscoColor from "../models/DiscoColor";
+import DiscoBannerImage from "../models/DiscoBannerImage";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -109,20 +110,39 @@ export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Re
 
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, bankCardNumber } =
-      req.body;
+    const {
+      name,
+      slug,
+      logo,
+      description,
+      bannerImage,
+      h1Color,
+      h2Color,
+      brandColor,
+      secondaryColor,
+      bgColor,
+      textColor,
+      buttonColor,
+      buttonForeground,
+      largeDescription,
+      address,
+      administrator,
+      bankCardNumber,
+      bgImage,
+    } = req.body;
 
     const newDisco: any = await Disco.create({
       name,
       logo,
       slug,
     });
+    const discoId = newDisco.id;
 
     const userBankCard: any = await UserBankCard.create({
       number: bankCardNumber,
       userId: administrator,
     });
-    const discoId = newDisco.id;
+
     const detailsDisco: any = await DiscoDetail.create({
       discoId,
       administrator,
@@ -132,6 +152,22 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       address,
       userBankCardId: userBankCard.id,
     });
+
+    const discoDetailId = detailsDisco.id;
+
+    const discoColors = await DiscoColor.create({
+      brandColor,
+      secondaryColor,
+      h1Color,
+      h2Color,
+      bgColor,
+      textColor,
+      buttonColor,
+      buttonForeground,
+      discoDetailId,
+    });
+
+    const bannerImages = await DiscoBannerImage.bulkCreate([{ image: bannerImage, discoDetailId }]);
 
     const discoRoles = await DiscoRole.bulkCreate([
       { name: "user", discoId },
