@@ -12,6 +12,7 @@ const DiscoBannerImage = sequelize.define("discoBannerImage", {
   },
   alt: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
 });
 

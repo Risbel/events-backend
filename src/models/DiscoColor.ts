@@ -10,13 +10,25 @@ const DiscoColor = sequelize.define("discoColor", {
   brandColor: {
     type: DataTypes.STRING,
   },
-  secondary: {
+  secondaryColor: {
     type: DataTypes.STRING,
   },
   bgColor: {
     type: DataTypes.STRING,
   },
   textColor: {
+    type: DataTypes.STRING,
+  },
+  h1Color: {
+    type: DataTypes.STRING,
+  },
+  h2Color: {
+    type: DataTypes.STRING,
+  },
+  buttonColor: {
+    type: DataTypes.STRING,
+  },
+  buttonForeground: {
     type: DataTypes.STRING,
   },
 });
