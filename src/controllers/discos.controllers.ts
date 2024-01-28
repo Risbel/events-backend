@@ -93,6 +93,29 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
   }
 };
 
+export const getMyEvents = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const { userId } = req.params;
+
+    const disco: any = await Disco.findAll({
+      include: [
+        {
+          model: DiscoDetail,
+          where: { administrator: userId },
+        },
+      ],
+    });
+
+    if (!disco) {
+      return res.status(404).json({ message: "You hav't Events" });
+    }
+
+    return res.status(200).json(disco);
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params;
