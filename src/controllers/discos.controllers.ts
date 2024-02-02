@@ -17,7 +17,7 @@ export const getDiscos = async (_req: Request, res: Response): Promise<Response>
       include: [
         {
           model: DiscoDetail,
-          attributes: ["address", "description"],
+          attributes: ["address", "bannerDescription"],
         },
       ],
       attributes: ["id", "logo", "name", "slug"],
