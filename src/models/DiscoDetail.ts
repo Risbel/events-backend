@@ -12,10 +12,10 @@ const DiscoDetail = sequelize.define("discoDetail", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  description: {
+  bannerDescription: {
     type: DataTypes.STRING,
   },
-  largeDescription: {
+  aboutDescription: {
     type: DataTypes.TEXT,
   },
   bgImage: {

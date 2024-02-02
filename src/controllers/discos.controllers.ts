@@ -134,20 +134,38 @@ export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Re
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
     const {
+      //general
       name,
       slug,
-      logo,
-      description,
-      bannerImage,
-      h1Color,
-      h2Color,
       brandColor,
-      secondaryColor,
-      bgColor,
-      textColor,
+      //navbar
+      logo,
+      bgNavbarColor,
+      navbarForeground,
+      //home
+      bannerImage,
+      h1Banner,
+      h1BannerColor,
+      bannerGradientColor,
+      bannerDescription,
+      bannerDescriptionColor,
+      //about
+      bgAboutColor,
+      aboutDescription,
+      textAboutColor,
       buttonColor,
       buttonForeground,
-      largeDescription,
+      //experience
+      bgExperiencies,
+      experienciesH1Color,
+      //tickes
+      bgTicketsSection,
+      ticketH1Color,
+      buttonsTicketsColor,
+      buttonTicketForeground,
+      //footer
+      phone,
+      email,
       address,
       administrator,
       bankCardNumber,
@@ -167,10 +185,12 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
     });
 
     const detailsDisco: any = await DiscoDetail.create({
+      h1Banner,
       discoId,
       administrator,
-      description,
-      largeDescription,
+
+      bannerDescription,
+      aboutDescription,
       bgImage,
       address,
       userBankCardId: userBankCard.id,
@@ -179,15 +199,23 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
     const discoDetailId = detailsDisco.id;
 
     const discoColors = await DiscoColor.create({
+      bgTicketsSection,
+      ticketH1Color,
+      buttonsTicketsColor,
+      buttonTicketForeground,
+      bgExperiencies,
+      experienciesH1Color,
+      textAboutColor,
+      h1BannerColor,
+      bannerGradientColor,
       brandColor,
-      secondaryColor,
-      h1Color,
-      h2Color,
-      bgColor,
-      textColor,
+      bgNavbarColor,
+      navbarForeground,
       buttonColor,
       buttonForeground,
       discoDetailId,
+      bannerDescriptionColor,
+      bgAboutColor,
     });
 
     const bannerImages = await DiscoBannerImage.bulkCreate([{ image: bannerImage, discoDetailId }]);
