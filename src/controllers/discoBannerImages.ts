@@ -24,15 +24,13 @@ export const getBannerImageById = async (req: Request, res: Response): Promise<R
 export const createBannerImages = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { discoDetailId } = req.params;
-    const { image, alt } = req.body;
+    const { bannerImages } = req.body;
 
-    const newDiscoBannerImage: any = await DiscoBannerImage.create({
-      discoDetailId,
-      image,
-      alt,
-    });
+    const imagesToInsert = bannerImages.map((image: any) => ({ image: image.name, discoDetailId }));
 
-    return res.status(200).json({ disco: newDiscoBannerImage });
+    const newDiscoBannerImages: any = await DiscoBannerImage.bulkCreate(imagesToInsert);
+
+    return res.status(200).json({ disco: newDiscoBannerImages });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }

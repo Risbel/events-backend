@@ -71,7 +71,7 @@ app.use("/api/reservation", reservationRoutes);
 app.use("/api", authRoutes);
 app.use("/api/subscription", subscriptionsRoutes);
 app.use("/api/discoImage", discoImagesRoutes);
-app.use("/api/discoBannerImages", discoBannerImages);
+app.use("/api/discoBannerImage", discoBannerImages);
 app.use("/api/discoRoles", discoRolesRoutes);
 app.use("/api/rolesPermissionsResources", rolesPermissionsResources);
 app.use("/api/permission", permissionsRoutes);
