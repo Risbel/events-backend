@@ -18,6 +18,12 @@ const DiscoDetail = sequelize.define("discoDetail", {
   aboutDescription: {
     type: DataTypes.TEXT,
   },
+  titleTextCarousel: {
+    type: DataTypes.TEXT,
+  },
+  titleTextAbout: {
+    type: DataTypes.TEXT,
+  },
   bgImage: {
     type: DataTypes.STRING,
   },

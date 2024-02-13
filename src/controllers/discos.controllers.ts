@@ -150,12 +150,14 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bannerDescription,
       bannerDescriptionColor,
       //about
+      titleTextAbout,
       bgAboutColor,
       aboutDescription,
       textAboutColor,
       buttonColor,
       buttonForeground,
       //experience
+      titleTextCarousel,
       bgExperiencies,
       experienciesH1Color,
       //tickes
@@ -188,9 +190,10 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       h1Banner,
       discoId,
       administrator,
-
       bannerDescription,
+      titleTextAbout,
       aboutDescription,
+      titleTextCarousel,
       bgImage,
       address,
       userBankCardId: userBankCard.id,
