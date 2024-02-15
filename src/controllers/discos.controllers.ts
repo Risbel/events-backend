@@ -138,6 +138,8 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       name,
       slug,
       brandColor,
+      startDate,
+      endDate,
       //navbar
       logo,
       bgNavbarColor,
@@ -178,6 +180,8 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       name,
       logo,
       slug,
+      startDate,
+      endDate,
     });
     const discoId = newDisco.id;
 

@@ -24,6 +24,12 @@ const Disco = sequelize.define("Disco", {
   slug: {
     type: DataTypes.STRING,
   },
+  startDate: {
+    type: DataTypes.DATE,
+  },
+  endDate: {
+    type: DataTypes.DATE,
+  },
 });
 
 Disco.hasOne(DiscoDetail, {
