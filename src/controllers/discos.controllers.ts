@@ -10,6 +10,8 @@ import User from "../models/User";
 import UserBankCard from "../models/UserBankCard";
 import DiscoColor from "../models/DiscoColor";
 import DiscoBannerImage from "../models/DiscoBannerImage";
+import { formatBufferTo64 } from "../utils/formatBufferTo64";
+import { uploadMultipleImages } from "../utils/cloudinary";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -141,11 +143,9 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       startDate,
       endDate,
       //navbar
-      logo,
       bgNavbarColor,
       navbarForeground,
       //home
-      bannerImage,
       h1Banner,
       h1BannerColor,
       bannerGradientColor,
@@ -176,9 +176,19 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bgImage,
     } = req.body;
 
+    console.log(req.body);
+
+    const imagesToUpload: any = req.files;
+
+    const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
+
+    const imgsUloaded = await uploadMultipleImages(imagesInBufferTo64);
+
+    console.log(imgsUloaded);
+
     const newDisco: any = await Disco.create({
+      logo: imgsUloaded?.[0]?.image,
       name,
-      logo,
       slug,
       startDate,
       endDate,
@@ -225,7 +235,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bgAboutColor,
     });
 
-    const bannerImages = await DiscoBannerImage.bulkCreate([{ image: bannerImage, discoDetailId }]);
+    const bannerImages = await DiscoBannerImage.bulkCreate([{ image: imgsUloaded?.[1]?.image, discoDetailId }]);
 
     const discoRoles = await DiscoRole.bulkCreate([
       { name: "user", discoId },

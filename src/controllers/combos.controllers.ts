@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Combo from "../models/Combo";
 import ComboDetail from "../models/ComboDetail";
 import ComboReservation from "../models/ComboReservation";
-import cloudinary from "../utils/cloudinary";
+import { uploadImage } from "../utils/cloudinary";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
 import Disco from "../models/Disco";
 import DiscoDetail from "../models/DiscoDetail";
@@ -43,7 +43,7 @@ export const createCombo = async (req: Request, res: Response) => {
 
     const file64: any = formatBufferTo64(req.file);
 
-    const result = await cloudinary.uploader.upload(file64.content);
+    const { image, imageCloudId }: any = await uploadImage(file64.content);
 
     const newCombo: any = await Combo.create({
       discoId,
@@ -55,8 +55,8 @@ export const createCombo = async (req: Request, res: Response) => {
     const comboImage = await ComboDetail.create({
       comboId: newCombo.id,
       description,
-      image: result.secure_url,
-      imageCloudId: result.public_id,
+      image,
+      imageCloudId,
     });
 
     res.status(200).json({ newCombo: newCombo, comboImage: comboImage });

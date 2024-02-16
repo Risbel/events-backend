@@ -6,7 +6,7 @@ import DiscoBankCard from "../models/UserBankCard";
 import DiscoDetail from "../models/DiscoDetail";
 import TicketsReservation from "../models/TicketsReservation";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
-import cloudinary from "../utils/cloudinary";
+import { uploadImage } from "../utils/cloudinary";
 
 export const getTickets = async (_req: Request, res: Response) => {
   try {
@@ -59,7 +59,7 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
 
     const file64: any = req.file ? formatBufferTo64(req.file) : null;
 
-    const result = file64 ? await cloudinary.uploader.upload(file64.content) : null;
+    const { image }: any = file64 ? await uploadImage(file64.content) : null;
 
     const newDiscoTicket: any = await DiscoTicket.create({
       discoId: id,
@@ -72,11 +72,11 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
     });
     const ticketId = newDiscoTicket.id;
 
-    const ticketImage = result
+    const ticketImage = image
       ? await TicketImages.create({
           imageText: shortDescription,
           discoTicketId: ticketId,
-          image: result.secure_url,
+          image,
         })
       : null;
 

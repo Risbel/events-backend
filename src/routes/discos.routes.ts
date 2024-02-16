@@ -11,12 +11,13 @@ import {
   getMyEvents,
 } from "../controllers/discos.controllers";
 import { verifyToken } from "../middlewares/authorization";
+import upload from "../utils/multer";
 
 router.get("/", getDiscos);
 router.get("/roles/:id", getRolesByIdDisco);
 router.get("/myEvents/:userId", getMyEvents);
 router.get("/:slug/:userId?", getDisco);
-router.post("/", createDisco);
+router.post("/", upload.any(), createDisco);
 router.put("/:id", updateDisco);
 router.delete("/:id", deleteDisco);
 
