@@ -18,10 +18,8 @@ export const uploadImage = async (image: any) => {
       const result = await cloudinary.uploader.upload(image, opts);
 
       if (result && result.secure_url) {
-        console.log(result);
         resolve({ image: result.secure_url, imageCloudId: result.public_id });
       } else {
-        console.log(result);
         reject({ message: "No se pudo obtener la URL segura de la imagen" });
       }
     } catch (error) {

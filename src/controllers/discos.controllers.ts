@@ -176,15 +176,11 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bgImage,
     } = req.body;
 
-    console.log(req.body);
-
     const imagesToUpload: any = req.files;
 
     const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
 
     const imgsUloaded = await uploadMultipleImages(imagesInBufferTo64);
-
-    console.log(imgsUloaded);
 
     const newDisco: any = await Disco.create({
       logo: imgsUloaded?.[0]?.image,

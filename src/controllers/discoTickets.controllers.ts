@@ -59,7 +59,7 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
 
     const file64: any = req.file ? formatBufferTo64(req.file) : null;
 
-    const { image }: any = file64 ? await uploadImage(file64.content) : null;
+    const { image: imageUrl }: any = file64 ? await uploadImage(file64.content) : { image: null };
 
     const newDiscoTicket: any = await DiscoTicket.create({
       discoId: id,
@@ -72,11 +72,11 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
     });
     const ticketId = newDiscoTicket.id;
 
-    const ticketImage = image
+    const ticketImage = imageUrl
       ? await TicketImages.create({
           imageText: shortDescription,
           discoTicketId: ticketId,
-          image,
+          image: imageUrl,
         })
       : null;
 

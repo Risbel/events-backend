@@ -12,6 +12,9 @@ const DiscoDetail = sequelize.define("discoDetail", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
+  h1Banner: {
+    type: DataTypes.STRING,
+  },
   bannerDescription: {
     type: DataTypes.STRING,
   },
