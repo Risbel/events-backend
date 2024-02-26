@@ -239,6 +239,15 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       { name: "admin", discoId },
     ]);
 
+    const userRole: any = discoRoles.find((role: any) => role.name === "admin");
+    const roleId = userRole.id;
+
+    const newSubscription = await Subscription.create({
+      discoId,
+      userId: administrator,
+      roleId,
+    });
+
     return res.status(200).json({ disco: newDisco, details: detailsDisco });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
