@@ -172,8 +172,6 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       email,
       address,
       administrator,
-      bankCardNumber,
-      bgImage,
     } = req.body;
 
     const imagesToUpload: any = req.files;
@@ -191,11 +189,6 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
     });
     const discoId = newDisco.id;
 
-    const userBankCard: any = await UserBankCard.create({
-      number: bankCardNumber,
-      userId: administrator,
-    });
-
     const detailsDisco: any = await DiscoDetail.create({
       h1Banner,
       discoId,
@@ -204,9 +197,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       titleTextAbout,
       aboutDescription,
       titleTextCarousel,
-      bgImage,
       address,
-      userBankCardId: userBankCard.id,
     });
 
     const discoDetailId = detailsDisco.id;
