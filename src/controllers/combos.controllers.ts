@@ -26,7 +26,10 @@ export const getComboByDiscoId = async (req: Request, res: Response) => {
       include: [
         ComboDetail,
         ComboReservation,
-        { model: Disco, include: [{ model: DiscoDetail, include: [{ model: UserBankCard }] }] },
+        {
+          model: Disco,
+          include: [{ model: DiscoDetail, include: [{ model: UserBankCard }] }],
+        },
       ],
     });
 
@@ -45,7 +48,7 @@ export const createCombo = async (req: Request, res: Response) => {
 
     // const { image, imageCloudId }: any = await uploadImage(file64.content);
 
-    const image = uploadImage(req.file);
+    const image = await uploadImage(req.file);
 
     const newCombo: any = await Combo.create({
       discoId,

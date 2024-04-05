@@ -7,6 +7,7 @@ const db = appConfig.db as DbConfig; //as para hacer una aserción de tipo en un
 export const sequelize = new Sequelize(db.database, db.user, db.password, {
   host: db.host,
   port: parseInt(db.port),
+  dialect: "postgres",
   dialectModule: pg,
   dialectOptions: {
     ssl: {
@@ -24,5 +25,4 @@ export interface DbConfig {
   host: string;
   port: string;
   database: string;
-  conectionString: string;
 }

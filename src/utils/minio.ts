@@ -8,17 +8,17 @@ var minioClient = new Minio.Client({
   secretKey: config.minio.secretAccessKey,
   useSSL: true,
 });
-
 export const uploadImage = async (file: any) => {
-  var metaData = {
+  const metaData = {
     "Content-Type": `${file?.mimetype}`,
     "Content-Language": "en",
   };
 
-  new Promise(async (resolve, reject) => {
+  // Returning the Promise here or using await
+  return new Promise(async (resolve, reject) => {
     minioClient.fPutObject(
-      `${config.minio.bucketName}`,
-      `${file?.originalname}`,
+      config.minio.bucketName,
+      file?.originalname,
       file?.path,
       metaData,
       function (err: any, objInfo: any) {
@@ -26,24 +26,29 @@ export const uploadImage = async (file: any) => {
         else resolve(objInfo);
       }
     );
-  });
+  }).then(() => {
+    const minioEndpoint = config.minio.endpoint;
+    const bucketName = config.minio.bucketName;
+    const objectName = file?.originalname;
+    const fileUrl = `${minioEndpoint}/${bucketName}/${objectName}`;
 
-  const minioEndpoint = config.minio.endpoint;
-  const bucketName = config.minio.bucketName;
-  const objectName = file?.originalname;
-  const fileUrl = `${minioEndpoint}/${bucketName}/${objectName}`;
-
-  if (file && file.path) {
-    fs.unlink(file.path, (err) => {
-      if (err) {
-        console.error("Error deleting uploaded file:", err);
+    // Return fileUrl after deleting the file
+    return new Promise((resolve, reject) => {
+      if (file && file.path) {
+        fs.unlink(file.path, (err) => {
+          if (err) {
+            console.error("Error deleting uploaded file:", err);
+            reject(err); // Reject if there's an error
+          } else {
+            console.log("Uploaded file deleted successfully");
+            resolve(fileUrl); // Resolve with fileUrl
+          }
+        });
       } else {
-        console.log("Uploaded file deleted successfully");
+        resolve(fileUrl); // Resolve with fileUrl if there's no file.path
       }
     });
-  }
-
-  return fileUrl;
+  });
 };
 
 export const uploadMultipleImages = async (files: any) => {

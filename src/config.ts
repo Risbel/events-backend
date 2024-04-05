@@ -7,8 +7,6 @@ const db = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_DATABASE,
-
-  conectionString: process.env.DB_URL,
 };
 
 const minio = {
