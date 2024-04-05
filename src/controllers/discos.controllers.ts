@@ -11,7 +11,7 @@ import UserBankCard from "../models/UserBankCard";
 import DiscoColor from "../models/DiscoColor";
 import DiscoBannerImage from "../models/DiscoBannerImage";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
-import { uploadMultipleImages } from "../utils/cloudinary";
+import { uploadMultipleImages } from "../utils/minio";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -176,9 +176,9 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 
     const imagesToUpload: any = req.files;
 
-    const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
+    // const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
 
-    const imgsUloaded = await uploadMultipleImages(imagesInBufferTo64);
+    const imgsUloaded = await uploadMultipleImages(imagesToUpload);
 
     const newDisco: any = await Disco.create({
       logo: imgsUloaded?.[0]?.image,

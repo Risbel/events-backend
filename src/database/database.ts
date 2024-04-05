@@ -4,14 +4,9 @@ import appConfig from "../config";
 
 const db = appConfig.db as DbConfig; //as para hacer una aserción de tipo en una sola línea
 
-// new Sequelize(...) crea una instancia de la clase Sequelize y configura la conexión a la db PostgreSQL
-// const sequelize = new Sequelize(db.database, db.user, db.password, {
-//   host: db.host,
-//   dialectModule: pg,
-//   dialect: "postgres",
-// });
-
-export const sequelize = new Sequelize(db.conectionString, {
+export const sequelize = new Sequelize(db.database, db.user, db.password, {
+  host: db.host,
+  port: parseInt(db.port),
   dialectModule: pg,
   dialectOptions: {
     ssl: {

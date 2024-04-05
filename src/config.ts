@@ -11,6 +11,13 @@ const db = {
   conectionString: process.env.DB_URL,
 };
 
+const minio = {
+  endpoint: process.env.MINIO_ENDPOINT,
+  bucketName: process.env.MINIO_BUCKET_NAME,
+  accessKeyId: process.env.MINIO_KEY,
+  secretAccessKey: process.env.MINIO_SECRET_KEY,
+};
+
 const originAllowedDev = process.env.URL_ALLOWED_CLIENT_DEV;
 const originAllowedPro = process.env.URL_ALLOWED_CLIENT_PRO;
 
@@ -20,6 +27,7 @@ const secretRefreshJwt: any = process.env.SECRET_REFRESH_JWT;
 
 const appConfig = {
   db,
+  minio,
   originAllowedDev,
   originAllowedPro,
   secretSignJwt,
