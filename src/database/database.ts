@@ -11,7 +11,7 @@ export const sequelize = new Sequelize(db.database, db.user, db.password, {
   dialectModule: pg,
   dialectOptions: {
     ssl: {
-      require: true,
+      require: false,
       rejectUnauthorized: false,
     },
   },
