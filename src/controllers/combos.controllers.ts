@@ -44,10 +44,6 @@ export const createCombo = async (req: Request, res: Response) => {
     const { discoId } = req.params;
     const { price, countInStock, description, category } = req.body;
 
-    // const file64: any = formatBufferTo64(req.file);
-
-    // const { image, imageCloudId }: any = await uploadImage(file64.content);
-
     const image = await uploadImage(req.file);
 
     const newCombo: any = await Combo.create({

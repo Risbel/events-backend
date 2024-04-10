@@ -6,7 +6,7 @@ import DiscoBankCard from "../models/UserBankCard";
 import DiscoDetail from "../models/DiscoDetail";
 import TicketsReservation from "../models/TicketsReservation";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
-import { uploadImage } from "../utils/cloudinary";
+import { uploadImage } from "../utils/minio";
 
 export const getTickets = async (_req: Request, res: Response) => {
   try {
@@ -57,9 +57,7 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { price, shortDescription, largeDescription, category, countInStock, expDate } = req.body;
 
-    const file64: any = req.file ? formatBufferTo64(req.file) : null;
-
-    const { image: imageUrl }: any = file64 ? await uploadImage(file64.content) : { image: null };
+    const imageUrl = req.file ? await uploadImage(req.file) : null;
 
     const newDiscoTicket: any = await DiscoTicket.create({
       discoId: id,
@@ -80,7 +78,7 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
         })
       : null;
 
-    return res.status(200).json({ ticket: newDiscoTicket, image: ticketImage });
+    return res.status(200).json({ ticket: newDiscoTicket, image: imageUrl });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

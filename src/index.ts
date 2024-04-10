@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
+import config from "./config";
 import sequelize from "./database/database";
 
 import "./models/User";
@@ -37,8 +38,9 @@ import discoRolesRoutes from "./routes/discoRoles.routes";
 import rolesPermissionsResources from "./routes/rolesPermissionsResources";
 import permissionsRoutes from "./routes/permissions.routes";
 import resourcesRoutes from "./routes/resources.routes";
+import checkout from "./routes/checkout.routes";
+import webhookRoutes from "./routes/webhook.routes";
 
-import config from "./config";
 import { createSuperAdmin } from "./utils/createSuperAdmin";
 import { createPermissionsResources } from "./utils/createPermissionsResources";
 
@@ -58,7 +60,7 @@ app.use(cookieParser());
 app.use(morgan("dev")); //muestra por consola en modo desarrollo las solicitudes y errores n casos de fallos
 
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: false, parameterLimit: 50000 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/user", usersRoutes);
@@ -76,6 +78,8 @@ app.use("/api/discoRoles", discoRolesRoutes);
 app.use("/api/rolesPermissionsResources", rolesPermissionsResources);
 app.use("/api/permission", permissionsRoutes);
 app.use("/api/resource", resourcesRoutes);
+app.use("/api/stripe", checkout);
+app.use("/api/webhook", webhookRoutes);
 
 const PORT = process.env.PORT || 4000;
 
