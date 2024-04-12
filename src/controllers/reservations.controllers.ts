@@ -9,50 +9,45 @@ import Combo from "../models/Combo";
 
 export const createReservation = async (req: Request, res: Response) => {
   try {
-    const { userId, cartItems }: { userId: string; cartItems: any[] } = req.body;
+    const { userId, cartItems }: IReservation = req.body;
 
-    const reservations = await Promise.all(
-      cartItems.map(async (disco) => {
-        const newReservation: any = await Reservation.create({
-          userId: userId,
-          discoId: disco.discoId,
-        });
+    const newReservation: any = await Reservation.create({
+      userId: userId,
+      discoId: cartItems[0].discoId,
+    });
 
-        const ticketsReservations = await Promise.all(
-          disco.items.map(async (item: any) => {
-            if (item.discoTicketId) {
-              const newTicketReservation: any = await TicketsReservation.create({
-                reservationId: newReservation.id,
-                discoTicketId: item.discoTicketId,
-                quantity: item.quantity,
-              });
+    const ticketsReservations = await Promise.all(
+      cartItems.map(async (item: ICartItem) => {
+        if (item.discoTicketId) {
+          const newTicketReservation: any = await TicketsReservation.create({
+            reservationId: newReservation.id,
+            discoTicketId: item.discoTicketId,
+            quantity: item.quantity,
+          });
 
-              const discoTicket: any = await DiscoTicket.findOne({ where: { id: item.discoTicketId } });
+          const discoTicket: any = await DiscoTicket.findOne({ where: { id: item.discoTicketId } });
 
-              discoTicket.countInStock = Number(discoTicket.countInStock) - Number(item.quantity);
+          discoTicket.countInStock = Number(discoTicket.countInStock) - Number(item.quantity);
 
-              const newDiscoTicket = await discoTicket.save();
-              return { newTicketReservation, newDiscoTicket };
-            } else {
-              const newComboReservation: any = await ComboReservation.create({
-                reservationId: newReservation.id,
-                comboId: item.comboId,
-                quantity: item.quantity,
-              });
-              const combo: any = await Combo.findOne({ where: { id: item.comboId } });
+          const newDiscoTicket = await discoTicket.save();
+          return { newTicketReservation, newDiscoTicket };
+        } else {
+          const newComboReservation: any = await ComboReservation.create({
+            reservationId: newReservation.id,
+            comboId: item.comboId,
+            quantity: item.quantity,
+          });
+          const combo: any = await Combo.findOne({ where: { id: item.comboId } });
 
-              combo.countInStock = Number(combo.countInStock) - Number(item.quantity);
+          combo.countInStock = Number(combo.countInStock) - Number(item.quantity);
 
-              const newCombo = await combo.save();
-              return { newComboReservation, newCombo };
-            }
-          })
-        );
-
-        return { ticketsReservations };
+          const newCombo = await combo.save();
+          return { newComboReservation, newCombo };
+        }
       })
     );
-    return res.status(200).json(reservations);
+
+    return res.status(200).json({ newReservation, ticketsReservations });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
@@ -102,3 +97,22 @@ export const getReservationsByDiscoSlug = async (req: Request, res: Response) =>
     return res.status(500).json({ error: error.message });
   }
 };
+
+export interface IReservation {
+  userId: string;
+  cartItems: ICartItem[];
+}
+
+interface ICartItem {
+  discoId: string;
+  discoTicketId: string | null;
+  comboId: string | null;
+  quantity: number;
+  category: string;
+  imagesTicket: string | null;
+  imagesCombo: string | null;
+  comboDescription: string | null;
+  ticketDescription: string;
+  price: string;
+  discoSlug: string;
+}
