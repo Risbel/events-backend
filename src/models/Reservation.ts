@@ -9,6 +9,9 @@ const Reservation = sequelize.define("reservation", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
+  colaborator: {
+    type: DataTypes.STRING,
+  },
 });
 
 export default Reservation;
