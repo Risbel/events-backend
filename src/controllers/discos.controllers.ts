@@ -180,13 +180,17 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 
     const imgsUloaded = await uploadMultipleImages(imagesToUpload);
 
+    console.log(imgsUloaded);
+
     const newDisco: any = await Disco.create({
-      logo: imgsUloaded?.[0]?.image,
       name,
+      logo: `https://${imgsUloaded?.[0]}`,
       slug,
       startDate,
       endDate,
     });
+
+    console.log("ok disco created");
     const discoId = newDisco.id;
 
     const detailsDisco: any = await DiscoDetail.create({
@@ -222,7 +226,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bgAboutColor,
     });
 
-    const bannerImages = await DiscoBannerImage.bulkCreate([{ image: imgsUloaded?.[1]?.image, discoDetailId }]);
+    const bannerImages = await DiscoBannerImage.bulkCreate([{ image: `https://${imgsUloaded?.[1]}`, discoDetailId }]);
 
     const discoRoles = await DiscoRole.bulkCreate([
       { name: "user", discoId },

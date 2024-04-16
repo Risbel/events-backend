@@ -53,8 +53,9 @@ export const uploadImage = async (file: any) => {
 
 export const uploadMultipleImages = async (files: any) => {
   try {
-    const uploads = files.map(async (base: any) => await uploadImage(base));
+    const uploads = files.map((base: any) => uploadImage(base));
     const results = await Promise.all(uploads);
+
     return results;
   } catch (error) {
     throw error;

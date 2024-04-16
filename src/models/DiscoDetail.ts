@@ -32,7 +32,6 @@ const DiscoDetail = sequelize.define("discoDetail", {
   },
   address: {
     type: DataTypes.STRING,
-    unique: true,
   },
 });
 
