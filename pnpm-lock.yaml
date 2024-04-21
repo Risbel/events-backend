@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@google/generative-ai':
+    specifier: ^0.7.1
+    version: 0.7.1
   axios:
     specifier: ^1.4.0
     version: 1.4.0
@@ -103,6 +106,11 @@ packages:
     dependencies:
       regenerator-runtime: 0.14.0
     dev: true
+
+  /@google/generative-ai@0.7.1:
+    resolution: {integrity: sha512-WTjMLLYL/xfA5BW6xAycRPiAX7FNHKAxrid/ayqC1QMam0KAK0NbMeS9Lubw80gVg5xFMLE+H7pw4wdNzTOlxw==}
+    engines: {node: '>=18.0.0'}
+    dev: false
 
   /@types/bcryptjs@2.4.2:
     resolution: {integrity: sha512-LiMQ6EOPob/4yUL66SZzu6Yh77cbzJFYll+ZfaPiPPFswtIlA/Fs1MzdKYA7JApHU49zQTbJGX3PDmCpIdDBRQ==}

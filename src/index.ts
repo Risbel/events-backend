@@ -38,6 +38,8 @@ import discoRolesRoutes from "./routes/discoRoles.routes";
 import rolesPermissionsResources from "./routes/rolesPermissionsResources";
 import permissionsRoutes from "./routes/permissions.routes";
 import resourcesRoutes from "./routes/resources.routes";
+import aiTextGenerator from "./routes/aiTextGenerator.routes";
+
 import checkout from "./routes/checkout.routes";
 import webhookRoutes from "./routes/webhook.routes";
 
@@ -78,6 +80,8 @@ app.use("/api/discoRoles", discoRolesRoutes);
 app.use("/api/rolesPermissionsResources", rolesPermissionsResources);
 app.use("/api/permission", permissionsRoutes);
 app.use("/api/resource", resourcesRoutes);
+app.use("/api/aiText", aiTextGenerator);
+
 app.use("/api/stripe", checkout);
 app.use("/api/webhook", webhookRoutes);
 
@@ -86,9 +90,9 @@ const PORT = process.env.PORT || 4000;
 async function main() {
   try {
     await sequelize.sync({ alter: true, logging: false });
-
     await createSuperAdmin();
     await createPermissionsResources();
+
     app.listen(PORT, () => {
       console.log("server on port", PORT);
     });
