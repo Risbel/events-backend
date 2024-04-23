@@ -43,7 +43,6 @@ import aiTextGenerator from "./routes/aiTextGenerator.routes";
 import checkout from "./routes/checkout.routes";
 import webhookRoutes from "./routes/webhook.routes";
 
-import { createSuperAdmin } from "./utils/createSuperAdmin";
 import { createPermissionsResources } from "./utils/createPermissionsResources";
 
 const { originAllowedDev, originAllowedPro }: any = config;
@@ -90,7 +89,7 @@ const PORT = process.env.PORT || 4000;
 async function main() {
   try {
     await sequelize.sync({ alter: true, logging: false });
-    await createSuperAdmin();
+
     await createPermissionsResources();
 
     app.listen(PORT, () => {
