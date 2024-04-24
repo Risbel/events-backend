@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
 import TicketsReservation from "./TicketsReservation";
 import TicketImages from "./TicketImages";
+import TicketCombo from "./TicketCombo";
 
 const DiscoTicket = sequelize.define("DiscoTicket", {
   id: {
@@ -30,6 +31,17 @@ const DiscoTicket = sequelize.define("DiscoTicket", {
 });
 
 export default DiscoTicket;
+
+DiscoTicket.hasMany(TicketCombo, {
+  foreignKey: {
+    name: "discoTicketId",
+  },
+  sourceKey: "id",
+});
+TicketCombo.belongsTo(DiscoTicket, {
+  foreignKey: "discoTicketId",
+  targetKey: "id",
+});
 
 DiscoTicket.hasMany(TicketsReservation, {
   foreignKey: {

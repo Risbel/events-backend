@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
 import Companion from "./Companions";
+import TicketReservationCombo from "./TicketReservationCombo";
 
 const TicketsReservation = sequelize.define("ticketsReservation", {
   id: {
@@ -13,6 +14,17 @@ const TicketsReservation = sequelize.define("ticketsReservation", {
   },
 });
 
+TicketsReservation.hasMany(TicketReservationCombo, {
+  foreignKey: "ticketReservationId",
+  sourceKey: "id",
+});
+
+TicketReservationCombo.belongsTo(TicketsReservation, {
+  foreignKey: "ticketReservationId",
+  targetKey: "id",
+});
+
+//pending to remove
 TicketsReservation.hasMany(Companion, {
   foreignKey: "ticketReservationId",
   sourceKey: "id",

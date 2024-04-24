@@ -2,6 +2,7 @@ import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
 import ComboReservation from "./ComboReservation";
 import ComboDetail from "./ComboDetail";
+import TicketCombo from "./TicketCombo";
 
 const Combo = sequelize.define("Combo", {
   id: {
@@ -20,6 +21,18 @@ const Combo = sequelize.define("Combo", {
   },
 });
 
+Combo.hasMany(TicketCombo, {
+  foreignKey: {
+    name: "comboId",
+  },
+  sourceKey: "id",
+});
+TicketCombo.belongsTo(Combo, {
+  foreignKey: "comboId",
+  targetKey: "id",
+});
+
+//pending to remove
 Combo.hasMany(ComboReservation, {
   foreignKey: {
     name: "comboId",
@@ -31,6 +44,7 @@ ComboReservation.belongsTo(Combo, {
   foreignKey: "comboId",
   targetKey: "id",
 });
+//----------------------------
 
 Combo.hasOne(ComboDetail, {
   foreignKey: {
