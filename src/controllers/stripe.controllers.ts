@@ -7,14 +7,15 @@ const stripe = new Stripe(
 
 export const checkout = async (req: Request, res: Response) => {
   try {
-    const cartItems: IReservation[] = req.body;
+    const { cartItems, companions }: IReservation = req.body;
     const { userId } = req.params;
 
-    const items = cartItems.map((item: IReservation) => {
+    const items = cartItems.map((item: ICartItem) => {
       return {
         discoTicketId: item.discoTicketId ?? null,
         comboId: item.comboId ?? null,
         quantity: item.quantity,
+        colaborator: item.colaborator ?? null,
       };
     });
 
@@ -26,11 +27,12 @@ export const checkout = async (req: Request, res: Response) => {
               currency: "usd",
               product_data: {
                 name: `${item.category} combo`,
-                images: [encodeURI(item.imagesCombo)],
+                images: [item.comboImage],
                 description: item.comboDescription ?? "no description provided",
                 metadata: {
                   comboId: item.comboId,
                   discoTicketId: item.discoTicketId,
+                  colaborator: item?.colaborator ?? null,
                 },
               },
               unit_amount: Number(item.price) * 100,
@@ -48,6 +50,7 @@ export const checkout = async (req: Request, res: Response) => {
                 metadata: {
                   comboId: item.comboId ?? null,
                   discoTicketId: item.discoTicketId,
+                  colaborator: item.colaborator ?? null,
                 },
               },
               unit_amount: Number(item.price) * 100,
@@ -59,12 +62,14 @@ export const checkout = async (req: Request, res: Response) => {
       metadata: {
         userId: userId,
         discoId: cartItems[0].discoId,
+        colaborator: cartItems[0].colaborator,
         items: JSON.stringify(items),
+        companions: JSON.stringify(companions),
       },
       mode: "payment",
       payment_method_types: ["card"],
-      success_url: `http://localhost:3000/event/${cartItems[0].discoSlug}/success`,
-      cancel_url: `http://localhost:3000/event/${cartItems[0].discoSlug}/cancel`,
+      success_url: `${process.env.URL_ALLOWED_CLIENT_PRO}/event/${cartItems[0].discoSlug}/success`,
+      cancel_url: `${process.env.URL_ALLOWED_CLIENT_PRO}/event/${cartItems[0].discoSlug}/cancel`,
     });
 
     return res.status(200).json(session);
@@ -74,15 +79,24 @@ export const checkout = async (req: Request, res: Response) => {
 };
 
 export interface IReservation {
+  cartItems: ICartItem[];
+  companions?: {
+    firstName: string;
+    lastName: string;
+  }[];
+}
+
+interface ICartItem {
   discoId: string;
   discoTicketId: string | null;
   comboId: string | null;
   quantity: number;
   category: string;
-  imagesCombo: string;
+  comboImage: string;
   imagesTicket: string;
   comboDescription: string;
   ticketDescription: string;
   price: number;
   discoSlug: string;
+  colaborator: string | null;
 }

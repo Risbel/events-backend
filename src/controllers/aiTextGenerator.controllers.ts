@@ -70,6 +70,6 @@ export const colorGenerator = async (req: Request, res: Response) => {
 
     res.status(200).json(text);
   } catch (error) {
-    return res.status(500).json({ error: "Unexpected server error" });
+    return res.status(500).json({ error: `Unexpected server error: ${error}` });
   }
 };

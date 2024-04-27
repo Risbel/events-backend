@@ -7,9 +7,6 @@ const TicketCombo = sequelize.define("ticketCombo", {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  quantity: {
-    type: DataTypes.INTEGER,
-  },
 });
 
 export default TicketCombo;

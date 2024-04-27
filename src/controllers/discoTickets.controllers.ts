@@ -7,6 +7,9 @@ import DiscoDetail from "../models/DiscoDetail";
 import TicketsReservation from "../models/TicketsReservation";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
 import { uploadImage } from "../utils/minio";
+import Combo from "../models/Combo";
+import TicketCombo from "../models/TicketCombo";
+import ComboDetail from "../models/ComboDetail";
 
 export const getTickets = async (_req: Request, res: Response) => {
   try {
@@ -24,7 +27,10 @@ export const getTicketsByIdDisco = async (req: Request, res: Response) => {
 
     const ticketsByDisco = await DiscoTicket.findAll({
       where: { discoId: id },
-      include: { model: TicketsReservation, attributes: ["id", "quantity"] },
+      include: [
+        { model: TicketsReservation, attributes: ["id", "quantity"] },
+        { model: TicketCombo, include: [{ model: Combo }] },
+      ],
     });
     return res.status(200).json(ticketsByDisco);
   } catch (error: any) {
@@ -40,6 +46,7 @@ export const getTicketById = async (req: Request, res: Response) => {
       include: [
         { model: Disco, include: [{ model: DiscoDetail, include: [{ model: DiscoBankCard }] }] },
         { model: TicketImages },
+        { model: TicketCombo, include: [{ model: Combo, include: [{ model: ComboDetail }] }] },
       ],
     });
     if (discoTicket === null) {

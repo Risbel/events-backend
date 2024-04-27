@@ -7,6 +7,7 @@ import User from "../models/User";
 import ComboReservation from "../models/ComboReservation";
 import Combo from "../models/Combo";
 import Companion from "../models/Companions";
+import TicketReservationCombo from "../models/TicketReservationCombo";
 
 export const createReservation = async (req: Request, res: Response) => {
   try {
@@ -18,49 +19,63 @@ export const createReservation = async (req: Request, res: Response) => {
       colaborator: cartItems[0].colaborator,
     });
 
-    const ticketsReservations = await Promise.all(
-      cartItems.map(async (item: ICartItem) => {
+    const ticketReservations: (INewTicketReservation | null)[] = await Promise.all(
+      cartItems.map(async (item) => {
         if (item.discoTicketId) {
-          const newTicketReservation: any = await TicketsReservation.create({
+          return await TicketsReservation.create<any>({
             reservationId: newReservation.id,
             discoTicketId: item.discoTicketId,
             quantity: item.quantity,
           });
-
-          const companionPromises = companions.map((comp) =>
-            Companion.create({
-              ticketReservationId: newTicketReservation.id,
-              firstName: comp.firstName,
-              lastName: comp.lastName,
-            })
-          );
-
-          // Wait for all companion creations to finish before continuing
-          await Promise.all(companionPromises);
-
-          const discoTicket: any = await DiscoTicket.findOne({ where: { id: item.discoTicketId } });
-
-          discoTicket.countInStock = Number(discoTicket.countInStock) - Number(item.quantity);
-
-          const newDiscoTicket = await discoTicket.save();
-          return { newTicketReservation, newDiscoTicket };
         } else {
-          const newComboReservation: any = await ComboReservation.create({
-            reservationId: newReservation.id,
-            comboId: item.comboId,
-            quantity: item.quantity,
-          });
-          const combo: any = await Combo.findOne({ where: { id: item.comboId } });
-
-          combo.countInStock = Number(combo.countInStock) - Number(item.quantity);
-
-          const newCombo = await combo.save();
-          return { newComboReservation, newCombo };
+          return null;
         }
       })
     );
 
-    return res.status(200).json({ newReservation, ticketsReservations });
+    const primerTicket = ticketReservations.find((ticket) => ticket && ticket.dataValues);
+
+    const companionPromises = companions.length
+      ? companions.map(async (comp) => {
+          return await Companion.create({
+            ticketReservationId: primerTicket?.dataValues.id,
+            firstName: comp.firstName,
+            lastName: comp.lastName,
+          });
+        })
+      : [];
+    // Wait for all companion creations to finish before continuing
+    const newCompanions = await Promise.all(companionPromises);
+
+    const discoTicket: any = await DiscoTicket.findOne({ where: { id: primerTicket?.dataValues.discoTicketId } });
+    discoTicket.countInStock = Number(discoTicket.countInStock) - Number(primerTicket?.dataValues.quantity);
+    await discoTicket.save();
+
+    const ticketReservationCombo: (INewComboReservation | null)[] = await Promise.all(
+      cartItems.map(async (item) => {
+        if (item.comboId) {
+          return await TicketReservationCombo.create<any>({
+            ticketReservationId: primerTicket?.dataValues.id,
+            comboId: item.comboId,
+            quantity: item.quantity,
+          });
+        } else {
+          null;
+        }
+      })
+    );
+
+    const newCombos: INewComboReservation[] | any = ticketReservationCombo.filter((combo) => combo && combo.dataValues);
+
+    await Promise.all(
+      newCombos.map(async (combo: INewComboReservation) => {
+        const matchedCombo: any = await Combo.findOne({ where: { id: combo.dataValues.comboId } });
+        matchedCombo.countInStock = Number(matchedCombo.countInStock) - Number(combo.dataValues.quantity);
+        await matchedCombo.save();
+      })
+    );
+
+    return res.status(200).json({ message: "Ok" });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
@@ -75,9 +90,12 @@ export const getReservationsByUserId = async (req: Request, res: Response) => {
       include: [
         {
           model: TicketsReservation,
-          include: [{ model: DiscoTicket, include: [{ model: Disco }] }, { model: Companion }],
+          include: [
+            { model: DiscoTicket, include: [{ model: Disco }] },
+            { model: Companion },
+            { model: TicketReservationCombo, include: [{ model: Combo, include: [{ model: Disco }] }] },
+          ],
         },
-        { model: ComboReservation, include: [{ model: Combo, include: [{ model: Disco }] }] },
       ],
     });
 
@@ -130,10 +148,37 @@ interface ICartItem {
   quantity: number;
   category: string;
   imagesTicket: string | null;
-  imagesCombo: string | null;
+  comboImage: string | null;
   comboDescription: string | null;
   ticketDescription: string;
   price: string;
   discoSlug: string;
   colaborator: string | null;
+}
+
+interface ICompanions {
+  firstName: string;
+  lastName: string;
+}
+
+interface INewTicketReservation {
+  dataValues: {
+    id: string;
+    reservationId: string;
+    discoTicketId: string;
+    quantity: number;
+    updatedAt: string;
+    createdAt: string;
+  };
+}
+
+interface INewComboReservation {
+  dataValues: {
+    id: string;
+    ticketReservationId: string;
+    comboId: string;
+    quantity: number;
+    updatedAt: string;
+    createdAt: string;
+  };
 }
