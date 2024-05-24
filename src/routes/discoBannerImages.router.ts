@@ -5,12 +5,13 @@ import {
   getBannerImageById,
   getBannerImages,
 } from "../controllers/discoBannerImages";
+import upload from "../utils/multer";
 
 const router = Router();
 
 router.get("/", getBannerImages);
 router.get("/:discoDetailId", getBannerImageById);
-router.post("/:discoDetailId", createBannerImages);
+router.post("/", upload.any(), createBannerImages);
 router.delete("/:id", deleteBannerImage);
 
 export default router;
