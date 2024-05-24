@@ -44,7 +44,7 @@ export const createCombo = async (req: Request, res: Response) => {
     const { discoId } = req.params;
     const { price, countInStock, description, category } = req.body;
 
-    const image = await uploadImage(req.file);
+    const image: any = await uploadImage(req.file);
 
     const newCombo: any = await Combo.create({
       discoId,
@@ -56,7 +56,7 @@ export const createCombo = async (req: Request, res: Response) => {
     const comboImage = await ComboDetail.create({
       comboId: newCombo.id,
       description,
-      image,
+      image: `https://${encodeURI(image)}`,
       imageCloudId: "",
     });
 

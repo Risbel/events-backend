@@ -64,7 +64,7 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { price, shortDescription, largeDescription, category, countInStock, expDate } = req.body;
 
-    const imageUrl = req.file ? await uploadImage(req.file) : null;
+    const imageUrl: any = req.file ? await uploadImage(req.file) : null;
 
     const newDiscoTicket: any = await DiscoTicket.create({
       discoId: id,
@@ -81,11 +81,11 @@ export const createDiscoTicket = async (req: Request, res: Response) => {
       ? await TicketImages.create({
           imageText: shortDescription,
           discoTicketId: ticketId,
-          image: imageUrl,
+          image: `https://${encodeURI(imageUrl)}`,
         })
       : null;
 
-    return res.status(200).json({ ticket: newDiscoTicket, image: imageUrl });
+    return res.status(200).json({ ticket: newDiscoTicket, image: ticketImage });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }

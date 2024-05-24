@@ -180,11 +180,9 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 
     const imgsUloaded = await uploadMultipleImages(imagesToUpload);
 
-    console.log(imgsUloaded);
-
     const newDisco: any = await Disco.create({
       name,
-      logo: `https://${imgsUloaded?.[0]}`,
+      logo: `https://${encodeURI(imgsUloaded?.[0])}`,
       slug,
       startDate,
       endDate,
