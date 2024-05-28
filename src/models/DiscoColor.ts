@@ -55,6 +55,12 @@ const DiscoColor = sequelize.define("discoColor", {
   buttonTicketForeground: {
     type: DataTypes.STRING,
   },
+  bgFooterColor: {
+    type: DataTypes.STRING,
+  },
+  foregroundFooterColor: {
+    type: DataTypes.STRING,
+  },
 });
 
 export default DiscoColor;

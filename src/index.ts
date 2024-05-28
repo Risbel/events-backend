@@ -9,6 +9,7 @@ import sequelize from "./database/database";
 import "./models/User";
 import "./models/Disco";
 import "./models/DiscoDetail";
+import "./models/QuickLink";
 import "./models/DiscoTicket";
 import "./models/Combo";
 import "./models/ComboDetail";

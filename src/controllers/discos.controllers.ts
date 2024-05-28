@@ -12,6 +12,8 @@ import DiscoColor from "../models/DiscoColor";
 import DiscoBannerImage from "../models/DiscoBannerImage";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
 import { uploadMultipleImages } from "../utils/minio";
+import QuickLink from "../models/QuickLink";
+import DiscoEmail from "../models/DiscoEmail";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -50,11 +52,19 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
               required: false,
             },
             {
+              model: QuickLink,
+              required: false,
+            },
+            {
               model: DiscoImage,
               required: false,
             },
             {
               model: DiscoPhone,
+              required: false,
+            },
+            {
+              model: DiscoEmail,
               required: false,
             },
             {
@@ -171,12 +181,16 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       phone,
       email,
       address,
+      socials,
+      quickLinks,
+      bgFooterColor,
+      foregroundFooterColor,
       administrator,
     } = req.body;
 
     const imagesToUpload: any = req.files;
 
-    // const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
+    const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
 
     const imgsUloaded = await uploadMultipleImages(imagesToUpload);
 
@@ -222,7 +236,41 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       discoDetailId,
       bannerDescriptionColor,
       bgAboutColor,
+      bgFooterColor,
+      foregroundFooterColor,
     });
+
+    await DiscoEmail.create({
+      name: email,
+      discoDetailId,
+    });
+
+    await DiscoPhone.create({
+      number: phone,
+      discoDetailId,
+    });
+
+    const socialsArray: SocialArray[] = JSON.parse(socials);
+    await DiscoNetworks.create({
+      facebook: socialsArray[0].url,
+      instagram: socialsArray[1].url,
+      youtube: socialsArray[2].url,
+      X: socialsArray[3].url,
+      discoDetailId,
+    });
+
+    const quickLinksArray: QuickLinksArray[] = JSON.parse(quickLinks);
+    const quickLinksArrayReady: any[] = quickLinksArray
+      .filter((link) => link.url && link.name) // Filtrar enlaces con url y name válidos
+      .map((link) => ({
+        url: link.url,
+        name: link.name,
+        discoDetailId,
+      }));
+
+    if (quickLinksArrayReady.length > 0) {
+      await QuickLink.bulkCreate(quickLinksArrayReady);
+    }
 
     const bannerImages = await DiscoBannerImage.bulkCreate([{ image: `https://${imgsUloaded?.[1]}`, discoDetailId }]);
 
@@ -315,3 +363,12 @@ export const deleteDisco = async (req: Request, res: Response): Promise<Response
     return res.status(500).json({ message: error.message });
   }
 };
+
+interface SocialArray {
+  url: string;
+}
+
+interface QuickLinksArray {
+  url: string;
+  name: string;
+}

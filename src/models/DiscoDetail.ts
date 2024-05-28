@@ -5,6 +5,8 @@ import DiscoNetworks from "./DiscoNetworks";
 import DiscoPhone from "./DiscoPhone";
 import DiscoBannerImage from "./DiscoBannerImage";
 import DiscoColor from "./DiscoColor";
+import QuickLink from "./QuickLink";
+import DiscoEmail from "./DiscoEmail";
 
 const DiscoDetail = sequelize.define("discoDetail", {
   id: {
@@ -35,6 +37,17 @@ const DiscoDetail = sequelize.define("discoDetail", {
   },
 });
 
+DiscoDetail.hasMany(QuickLink, {
+  foreignKey: {
+    name: "discoDetailId",
+  },
+  sourceKey: "id",
+});
+QuickLink.belongsTo(DiscoDetail, {
+  foreignKey: "discoDetailId",
+  targetKey: "id",
+});
+
 DiscoDetail.hasMany(DiscoImages, {
   foreignKey: {
     name: "discoDetailId",
@@ -42,13 +55,12 @@ DiscoDetail.hasMany(DiscoImages, {
   },
   sourceKey: "id",
 });
-
 DiscoImages.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
 });
 
-DiscoDetail.hasMany(DiscoNetworks, {
+DiscoDetail.hasOne(DiscoNetworks, {
   foreignKey: {
     name: "discoDetailId",
   },
@@ -66,6 +78,17 @@ DiscoDetail.hasMany(DiscoPhone, {
   sourceKey: "id",
 });
 DiscoPhone.belongsTo(DiscoDetail, {
+  foreignKey: "discoDetailId",
+  targetKey: "id",
+});
+
+DiscoDetail.hasMany(DiscoEmail, {
+  foreignKey: {
+    name: "discoDetailId",
+  },
+  sourceKey: "id",
+});
+DiscoEmail.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
 });
