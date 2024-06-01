@@ -20,6 +20,10 @@ const Combo = sequelize.define("Combo", {
   category: {
     type: DataTypes.STRING,
   },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 Combo.hasMany(TicketCombo, {

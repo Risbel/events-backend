@@ -16,6 +16,10 @@ const ComboDetail = sequelize.define("comboDetail", {
   imageCloudId: {
     type: DataTypes.STRING,
   },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 export default ComboDetail;
