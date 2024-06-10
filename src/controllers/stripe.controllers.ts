@@ -7,7 +7,7 @@ const stripe = new Stripe(
 
 export const checkout = async (req: Request, res: Response) => {
   try {
-    const { cartItems, companions }: IReservation = req.body;
+    const { cartItems }: IReservation = req.body;
     const { userId } = req.params;
 
     const items = cartItems.map((item: ICartItem) => {
@@ -64,7 +64,6 @@ export const checkout = async (req: Request, res: Response) => {
         discoId: cartItems[0].discoId,
         colaborator: cartItems[0].colaborator,
         items: JSON.stringify(items),
-        companions: JSON.stringify(companions),
       },
       mode: "payment",
       payment_method_types: ["card"],
@@ -80,10 +79,6 @@ export const checkout = async (req: Request, res: Response) => {
 
 export interface IReservation {
   cartItems: ICartItem[];
-  companions?: {
-    firstName: string;
-    lastName: string;
-  }[];
 }
 
 interface ICartItem {

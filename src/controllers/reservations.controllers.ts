@@ -4,14 +4,12 @@ import TicketsReservation from "../models/TicketsReservation";
 import DiscoTicket from "../models/DiscoTicket";
 import Disco from "../models/Disco";
 import User from "../models/User";
-import ComboReservation from "../models/ComboReservation";
 import Combo from "../models/Combo";
-import Companion from "../models/Companions";
 import TicketReservationCombo from "../models/TicketReservationCombo";
 
 export const createReservation = async (req: Request, res: Response) => {
   try {
-    const { userId, cartItems, companions }: IReservation = req.body;
+    const { userId, cartItems }: IReservation = req.body;
 
     const newReservation: any = await Reservation.create({
       userId: userId,
@@ -22,7 +20,7 @@ export const createReservation = async (req: Request, res: Response) => {
     const ticketReservations: (INewTicketReservation | null)[] = await Promise.all(
       cartItems.map(async (item) => {
         if (item.discoTicketId) {
-          return await TicketsReservation.create<any>({
+          return await TicketsReservation.create({
             reservationId: newReservation.id,
             discoTicketId: item.discoTicketId,
             quantity: item.quantity,
@@ -34,18 +32,6 @@ export const createReservation = async (req: Request, res: Response) => {
     );
 
     const primerTicket = ticketReservations.find((ticket) => ticket && ticket.dataValues);
-
-    const companionPromises = companions.length
-      ? companions.map(async (comp) => {
-          return await Companion.create({
-            ticketReservationId: primerTicket?.dataValues.id,
-            firstName: comp.firstName,
-            lastName: comp.lastName,
-          });
-        })
-      : [];
-    // Wait for all companion creations to finish before continuing
-    const newCompanions = await Promise.all(companionPromises);
 
     const discoTicket: any = await DiscoTicket.findOne({ where: { id: primerTicket?.dataValues.discoTicketId } });
     discoTicket.countInStock = Number(discoTicket.countInStock) - Number(primerTicket?.dataValues.quantity);
@@ -92,7 +78,6 @@ export const getReservationsByUserId = async (req: Request, res: Response) => {
           model: TicketsReservation,
           include: [
             { model: DiscoTicket, include: [{ model: Disco }] },
-            { model: Companion },
             { model: TicketReservationCombo, include: [{ model: Combo, include: [{ model: Disco }] }] },
           ],
         },
