@@ -3,7 +3,6 @@ import Reservation from "../models/Reservation";
 import TicketsReservation from "../models/TicketsReservation";
 import DiscoTicket from "../models/DiscoTicket";
 import Combo from "../models/Combo";
-import Companion from "../models/Companions";
 import TicketReservationCombo from "../models/TicketReservationCombo";
 
 const router = Router();
@@ -16,7 +15,6 @@ router.post("/", async (req: Request, res: Response) => {
     case "checkout.session.completed":
       const metadata: IMetadata = body.data.object.metadata;
       const cartItems: ICartItem[] = JSON.parse(body.data.object.metadata.items);
-      const companions: ICompanions[] = JSON.parse(body.data.object.metadata.companions);
 
       const newReservation: any = await Reservation.create({
         userId: metadata.userId,
@@ -39,18 +37,6 @@ router.post("/", async (req: Request, res: Response) => {
       );
 
       const primerTicket = ticketReservations.find((ticket) => ticket && ticket.dataValues);
-
-      const companionPromises = companions.length
-        ? companions.map(async (comp) => {
-            return await Companion.create({
-              ticketReservationId: primerTicket?.dataValues.id,
-              firstName: comp.firstName,
-              lastName: comp.lastName,
-            });
-          })
-        : [];
-      // Wait for all companion creations to finish before continuing
-      const newCompanions = await Promise.all(companionPromises);
 
       const discoTicket: any = await DiscoTicket.findOne({ where: { id: primerTicket?.dataValues.discoTicketId } });
       discoTicket.countInStock = Number(discoTicket.countInStock) - Number(primerTicket?.dataValues.quantity);
@@ -116,11 +102,6 @@ interface ICartItem {
   price: string;
   discoSlug: string;
   colaborator: string | null;
-}
-
-interface ICompanions {
-  firstName: string;
-  lastName: string;
 }
 
 interface INewTicketReservation {
