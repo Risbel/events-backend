@@ -28,6 +28,10 @@ const DiscoTicket = sequelize.define("DiscoTicket", {
   expDate: {
     type: DataTypes.DATE,
   },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 export default DiscoTicket;

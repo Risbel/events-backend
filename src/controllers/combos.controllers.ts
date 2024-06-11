@@ -108,7 +108,7 @@ export const deleteCombo = async (req: Request, res: Response) => {
     }
     await combo.update({ isDeleted: true });
 
-    return res.status(200).json({ message: "Combo and associated details deleted successfully" });
+    return res.status(200).json({ message: "Combo deleted successfully" });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }

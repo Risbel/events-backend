@@ -26,7 +26,7 @@ export const getTicketsByIdDisco = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const ticketsByDisco = await DiscoTicket.findAll({
-      where: { discoId: id },
+      where: { discoId: id, isDeleted: false },
       include: [
         { model: TicketsReservation, attributes: ["id", "quantity"] },
         { model: TicketCombo, include: [{ model: Combo }] },
@@ -116,15 +116,13 @@ export const deleteDiscoTicket = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    await TicketImages.destroy({
-      where: { discoTicketId: id },
-    });
+    const ticket = await DiscoTicket.findByPk(id);
+    if (!ticket) {
+      return res.status(404).json({ message: "Combo not found" });
+    }
+    await ticket.update({ isDeleted: true });
 
-    await DiscoTicket.destroy({
-      where: { id: id },
-    });
-
-    return res.status(204).json({ message: "Deleted successfully" });
+    return res.status(204).json({ message: "Ticket deleted successfully" });
   } catch (error: any) {
     return res.status(500).json({ error: error.message });
   }
