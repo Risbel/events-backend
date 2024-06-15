@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import DiscoImage from "../models/DiscoImage";
+import { uploadMultipleImages } from "../utils/minio";
 
 export const getImages = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -10,18 +11,19 @@ export const getImages = async (_req: Request, res: Response): Promise<Response>
   }
 };
 
-export const createDiscoImage = async (req: Request, res: Response): Promise<Response> => {
+export const createCarouselImages = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { discoDetailId } = req.params;
-    const { image, imageText } = req.body;
+    const { discoDetailsId } = req.body;
+    const imagesToUpload: any = req.files;
 
-    const newDiscoImage: any = await DiscoImage.create({
-      discoDetailId,
-      image,
-      imageText,
-    });
+    const imgsUloaded = await uploadMultipleImages(imagesToUpload);
+    const imagesToInsert = imgsUloaded.map((image: any) => ({
+      image: `https://${encodeURI(image)}`,
+      discoDetailId: discoDetailsId,
+    }));
+    const newCarouselImages: any = await DiscoImage.bulkCreate(imagesToInsert);
 
-    return res.status(200).json({ disco: newDiscoImage });
+    return res.status(200).json({ images: newCarouselImages });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
