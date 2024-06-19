@@ -23,6 +23,7 @@ import "./models/Resource";
 import "./models/rolePermissionResouce";
 import "./models/DiscoNetworks";
 import "./models/DiscoImage";
+import "./models/EventAbout";
 
 import usersRoutes from "./routes/users.routes";
 import userBankCardRoutes from "./routes/userBankCards.routes";

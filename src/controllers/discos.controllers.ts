@@ -14,6 +14,7 @@ import { formatBufferTo64 } from "../utils/formatBufferTo64";
 import { uploadMultipleImages } from "../utils/minio";
 import QuickLink from "../models/QuickLink";
 import DiscoEmail from "../models/DiscoEmail";
+import EventAbout from "../models/EventAbout";
 
 export const getDiscos = async (_req: Request, res: Response): Promise<Response> => {
   try {
@@ -74,6 +75,9 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
             {
               model: DiscoColor,
               required: false,
+            },
+            {
+              model: EventAbout,
             },
           ],
         },
@@ -145,39 +149,42 @@ export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Re
 
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
+    console.log(req.body);
+
     const {
-      //general
+      // general
       name,
       slug,
       brandColor,
       startDate,
       endDate,
-      //navbar
+      // navbar
       bgNavbarColor,
       navbarForeground,
-      //home
+      // home
       h1Banner,
       h1BannerColor,
       bannerGradientColor,
       bannerDescription,
       bannerDescriptionColor,
-      //about
+      // about
+      titleAboutColor,
       titleTextAbout,
       bgAboutColor,
-      aboutDescription,
-      textAboutColor,
+      layoutTextAbout,
+      aboutTexts,
       buttonColor,
       buttonForeground,
-      //experience
+      // experience
       titleTextCarousel,
       bgExperiencies,
       experienciesH1Color,
-      //tickes
+      // tickets
       bgTicketsSection,
       ticketH1Color,
       buttonsTicketsColor,
       buttonTicketForeground,
-      //footer
+      // footer
       phone,
       email,
       address,
@@ -188,11 +195,23 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       administrator,
     } = req.body;
 
+    if (!req.body) {
+      throw new Error("Request body is missing");
+    }
+
     const imagesToUpload: any = req.files;
 
-    const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
+    if (!imagesToUpload) {
+      throw new Error("No files uploaded");
+    }
+
+    // const imagesInBufferTo64: any = imagesToUpload.map((image: any) => formatBufferTo64(image).content);
 
     const imgsUloaded = await uploadMultipleImages(imagesToUpload);
+
+    if (!imgsUloaded || !imgsUloaded.length) {
+      throw new Error("Image upload failed");
+    }
 
     const newDisco: any = await Disco.create({
       name,
@@ -202,7 +221,6 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       endDate,
     });
 
-    console.log("ok disco created");
     const discoId = newDisco.id;
 
     const detailsDisco: any = await DiscoDetail.create({
@@ -211,12 +229,21 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       administrator,
       bannerDescription,
       titleTextAbout,
-      aboutDescription,
+      layoutTextAbout,
       titleTextCarousel,
       address,
     });
 
     const discoDetailId = detailsDisco.id;
+
+    const aboutTextsArray: any = JSON.parse(aboutTexts);
+    console.log(aboutTextsArray);
+    const aboutTextsWithDiscoDetailId = aboutTextsArray.map((aboutText: any) => ({
+      ...aboutText,
+      discoDetailId,
+    }));
+
+    await EventAbout.bulkCreate(aboutTextsWithDiscoDetailId);
 
     const discoColors = await DiscoColor.create({
       bgTicketsSection,
@@ -225,8 +252,8 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       buttonTicketForeground,
       bgExperiencies,
       experienciesH1Color,
-      textAboutColor,
       h1BannerColor,
+      bannerDescriptionColor,
       bannerGradientColor,
       brandColor,
       bgNavbarColor,
@@ -234,7 +261,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       buttonColor,
       buttonForeground,
       discoDetailId,
-      bannerDescriptionColor,
+      titleAboutColor,
       bgAboutColor,
       bgFooterColor,
       foregroundFooterColor,
@@ -250,16 +277,16 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       discoDetailId,
     });
 
-    const socialsArray: SocialArray[] = JSON.parse(socials);
+    const socialsArray: any[] = JSON.parse(socials);
     await DiscoNetworks.create({
-      facebook: socialsArray[0].url,
-      instagram: socialsArray[1].url,
-      youtube: socialsArray[2].url,
-      X: socialsArray[3].url,
+      facebook: socialsArray[0]?.url || "",
+      instagram: socialsArray[1]?.url || "",
+      youtube: socialsArray[2]?.url || "",
+      X: socialsArray[3]?.url || "",
       discoDetailId,
     });
 
-    const quickLinksArray: QuickLinksArray[] = JSON.parse(quickLinks);
+    const quickLinksArray: any[] = JSON.parse(quickLinks);
     const quickLinksArrayReady: any[] = quickLinksArray
       .filter((link) => link.url && link.name) // Filtrar enlaces con url y name válidos
       .map((link) => ({
@@ -291,6 +318,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 
     return res.status(200).json({ disco: newDisco, details: detailsDisco });
   } catch (error: any) {
+    console.error(error); // Log the complete error for debugging
     return res.status(500).json({ message: error.message });
   }
 };

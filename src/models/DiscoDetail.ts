@@ -7,6 +7,7 @@ import DiscoBannerImage from "./DiscoBannerImage";
 import DiscoColor from "./DiscoColor";
 import QuickLink from "./QuickLink";
 import DiscoEmail from "./DiscoEmail";
+import EventAbout from "./EventAbout";
 
 const DiscoDetail = sequelize.define("discoDetail", {
   id: {
@@ -27,6 +28,9 @@ const DiscoDetail = sequelize.define("discoDetail", {
     type: DataTypes.TEXT,
   },
   titleTextAbout: {
+    type: DataTypes.TEXT,
+  },
+  layoutTextAbout: {
     type: DataTypes.TEXT,
   },
   bgImage: {
@@ -107,6 +111,15 @@ DiscoDetail.hasOne(DiscoColor, {
   sourceKey: "id",
 });
 DiscoColor.belongsTo(DiscoDetail, {
+  foreignKey: "discoDetailId",
+  targetKey: "id",
+});
+
+DiscoDetail.hasMany(EventAbout, {
+  foreignKey: "discoDetailId",
+  sourceKey: "id",
+});
+EventAbout.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
 });
