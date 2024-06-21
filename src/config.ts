@@ -16,6 +16,10 @@ const minio = {
   secretAccessKey: process.env.MINIO_SECRET_KEY,
 };
 
+const stripe = {
+  testSecretKey: process.env.STRIPE_TEST_SECRET_KEY,
+};
+
 const originAllowedDev = process.env.URL_ALLOWED_CLIENT_DEV;
 const originAllowedPro = process.env.URL_ALLOWED_CLIENT_PRO;
 
@@ -30,6 +34,7 @@ const appConfig = {
   originAllowedPro,
   secretSignJwt,
   secretRefreshJwt,
+  stripe,
 };
 
 export default appConfig;
