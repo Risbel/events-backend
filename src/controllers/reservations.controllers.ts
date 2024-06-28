@@ -6,15 +6,29 @@ import Disco from "../models/Disco";
 import User from "../models/User";
 import Combo from "../models/Combo";
 import TicketReservationCombo from "../models/TicketReservationCombo";
+import sequelize from "../database/database";
+import { Op } from "sequelize";
+import { sub, format } from "date-fns";
 
 export const createReservation = async (req: Request, res: Response) => {
   try {
     const { userId, cartItems }: IReservation = req.body;
 
+    const ticketItems = cartItems.map((item) => {
+      if (item.discoId) {
+        return {
+          collaborator: item.collaborator,
+          expDate: item.expDate,
+          discoId: item.discoId,
+        };
+      }
+    });
+
     const newReservation: any = await Reservation.create({
       userId: userId,
-      discoId: cartItems[0].discoId,
-      colaborator: cartItems[0].colaborator,
+      discoId: ticketItems[0]?.discoId,
+      collaborator: ticketItems[0]?.collaborator,
+      expDate: ticketItems[0]?.expDate,
     });
 
     const ticketReservations: (INewTicketReservation | null)[] = await Promise.all(
@@ -89,26 +103,71 @@ export const getReservationsByUserId = async (req: Request, res: Response) => {
     return res.status(500).json({ error: error.message });
   }
 };
-
 export const getReservationsByDiscoSlug = async (req: Request, res: Response) => {
   try {
     const { slug } = req.params;
+    const { limit = 10, cursor }: any = req.query; // GET /reservations/disco/:slug?limit=10&cursor=2024-06-21
 
-    const reservationsByDiscoSlug = await Disco.findOne({
-      where: { slug: slug },
+    // Find the disco by slug first
+    const disco: any = await Disco.findOne({
+      where: { slug },
       attributes: ["id", "slug"],
-      include: {
-        model: Reservation,
-        attributes: ["userId", "createdAt", "id"],
-        include: [
-          { model: User, attributes: ["name", "phone", "email", "lastName"] },
-          {
-            model: TicketsReservation,
-            attributes: ["id", "quantity", "discoTicketId"],
-            include: [{ model: DiscoTicket, attributes: ["price", "expDate", "shortDescription", "id", "category"] }],
-          },
+    });
+
+    if (!disco) {
+      return res.status(404).json({ error: "Disco not found" });
+    }
+
+    const today = format(new Date(), "yyyy-MM-dd");
+    const yesterday = format(sub(new Date(), { days: 1 }), "yyyy-MM-dd");
+
+    const comparisonSign = (cursor: "yesterday" | "today" | "pending" | "expired") => {
+      if (cursor == "today") {
+        return "=";
+      } else if (cursor == "yesterday") {
+        return "=";
+      } else if (cursor == "expired") {
+        return "<";
+      } else {
+        return ">";
+      }
+    };
+
+    const formatedDate = (cursor: "yesterday" | "today" | "pending" | "expired") => {
+      if (cursor == "today" || cursor == "pending") {
+        return today;
+      } else {
+        return yesterday;
+      }
+    };
+
+    // Find reservations related to the disco founded
+    const reservationsByDiscoSlug = await Reservation.findAll({
+      where: {
+        discoId: disco.id,
+        [Op.and]: [
+          sequelize.where(sequelize.fn("date", sequelize.col("expDate")), comparisonSign(cursor), formatedDate(cursor)),
         ],
       },
+      attributes: ["userId", "createdAt", "id", "expDate"],
+      order: [["createdAt", "DESC"]],
+      limit: Number(limit),
+      include: [
+        {
+          model: User,
+          attributes: ["name", "phone", "email", "lastName"],
+        },
+        {
+          model: TicketsReservation,
+          attributes: ["id", "quantity", "discoTicketId"],
+          include: [
+            {
+              model: DiscoTicket,
+              attributes: ["price", "expDate", "shortDescription", "id", "category"],
+            },
+          ],
+        },
+      ],
     });
 
     return res.status(200).json(reservationsByDiscoSlug);
@@ -117,6 +176,24 @@ export const getReservationsByDiscoSlug = async (req: Request, res: Response) =>
   }
 };
 
+export const getReservationCombosById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const reservationCombos = await TicketReservationCombo.findAll({
+      where: { ticketReservationId: id },
+      include: [
+        {
+          model: Combo,
+        },
+      ],
+    });
+
+    return res.status(200).json(reservationCombos);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 export interface IReservation {
   userId: string;
   cartItems: ICartItem[];
@@ -138,7 +215,8 @@ interface ICartItem {
   ticketDescription: string;
   price: string;
   discoSlug: string;
-  colaborator: string | null;
+  collaborator: string | null;
+  expDate: string | null;
 }
 
 interface ICompanions {
@@ -165,5 +243,12 @@ interface INewComboReservation {
     quantity: number;
     updatedAt: string;
     createdAt: string;
+  };
+}
+
+interface IDisco {
+  dataValues: {
+    id: string;
+    slug: string;
   };
 }

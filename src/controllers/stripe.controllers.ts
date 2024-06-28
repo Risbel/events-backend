@@ -13,7 +13,8 @@ const createStripeSession = async (cartItems: ICartItem[], userId: string): Prom
     discoTicketId: item.discoTicketId ?? null,
     comboId: item.comboId ?? null,
     quantity: item.quantity,
-    colaborator: item.colaborator ?? null,
+    collaborator: item.collaborator ?? null,
+    expDate: item.expDate ?? null,
   }));
 
   return await stripe.checkout.sessions.create({
@@ -26,7 +27,7 @@ const createStripeSession = async (cartItems: ICartItem[], userId: string): Prom
           metadata: {
             comboId: item.comboId ?? null,
             discoTicketId: item?.discoTicketId ?? null,
-            colaborator: item?.colaborator ?? null,
+            expDate: item.expDate ?? null,
           },
         },
         unit_amount: Number(item.price) * 100,
@@ -42,7 +43,7 @@ const createStripeSession = async (cartItems: ICartItem[], userId: string): Prom
     metadata: {
       userId,
       discoId: cartItems[0].discoId,
-      colaborator: cartItems[0].colaborator,
+      collaborator: cartItems[0].collaborator,
       items: JSON.stringify(items),
     },
     mode: "payment",
@@ -88,5 +89,6 @@ interface ICartItem {
   ticketDescription: string;
   price: number;
   discoSlug: string;
-  colaborator: string | null;
+  collaborator: string | null;
+  expDate: string | null;
 }

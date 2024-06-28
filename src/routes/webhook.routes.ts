@@ -16,10 +16,13 @@ router.post("/", async (req: Request, res: Response) => {
       const metadata: IMetadata = body.data.object.metadata;
       const cartItems: ICartItem[] = JSON.parse(body.data.object.metadata.items);
 
+      const expDate: any = cartItems.find((item) => item.discoTicketId)?.expDate;
+
       const newReservation: any = await Reservation.create({
         userId: metadata.userId,
         discoId: metadata.discoId,
-        colaborator: metadata.colaborator,
+        collaborator: metadata.collaborator,
+        expDate: expDate,
       });
 
       const ticketReservations: (INewTicketReservation | null)[] = await Promise.all(
@@ -85,8 +88,7 @@ interface IMetadata {
   userId: string;
   discoId: string;
   items: string;
-  colaborator: string | null;
-  companions: string;
+  collaborator: string | null;
 }
 
 interface ICartItem {
@@ -101,7 +103,8 @@ interface ICartItem {
   ticketDescription: string;
   price: string;
   discoSlug: string;
-  colaborator: string | null;
+  collaborator: string | null;
+  expDate: string | null;
 }
 
 interface INewTicketReservation {
