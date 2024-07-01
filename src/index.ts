@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 
 import config from "./config";
 import sequelize from "./database/database";
+import swaggerDocs from "./utils/swagger";
 
 import "./models/User";
 import "./models/Disco";
@@ -122,8 +123,10 @@ async function main() {
 
     await createPermissionsResources();
 
-    app.listen(PORT, () => {
+    app.listen(PORT, async () => {
       console.log("server on port", PORT);
+
+      swaggerDocs(app, PORT);
     });
   } catch (error) {
     console.error("Unable to connect to the database:", error);
