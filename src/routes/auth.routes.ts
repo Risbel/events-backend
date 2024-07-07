@@ -36,7 +36,7 @@ import { signup, login, refreshToken } from "../controllers/auth.controllers";
  * /api/signup:
  *   post:
  *     summary: Sign up a new user
- *     tags: [Auth]
+ *     tags: [Authentication]
  *     requestBody:
  *       required: true
  *       content:
@@ -75,7 +75,7 @@ router.post("/signup", signup); //ok
  * /api/login:
  *   post:
  *     summary: Log in a user
- *     tags: [Auth]
+ *     tags: [Authentication]
  *     requestBody:
  *       required: true
  *       content:
@@ -131,7 +131,7 @@ router.post("/login", login); //ok
  * /api/refresh:
  *   post:
  *     summary: Refresh the access token
- *     tags: [Auth]
+ *     tags: [Authentication]
  *     requestBody:
  *       required: true
  *       content:

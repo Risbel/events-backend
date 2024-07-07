@@ -6,6 +6,7 @@ import Subscription from "./Subscription";
 import Combo from "./Combo";
 import DiscoRole from "./DiscoRole";
 import Reservation from "./Reservation";
+import EventNotification from "./EventNotification";
 
 const Disco = sequelize.define("Disco", {
   id: {
@@ -99,6 +100,17 @@ Disco.hasMany(Reservation, {
   sourceKey: "id",
 });
 Reservation.belongsTo(Disco, {
+  foreignKey: "discoId",
+  targetKey: "id",
+});
+
+Disco.hasMany(EventNotification, {
+  foreignKey: {
+    name: "discoId",
+  },
+  sourceKey: "id",
+});
+EventNotification.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
 });

@@ -15,8 +15,8 @@ const options: swaggerJsdoc.Options = {
       version,
       description: "This is the temporary swagger of MyEvent. Some endpoints are pending changes.",
       contact: {
-        email: "risbel961019@gmail.com",
-        name: "Risbel Suárez",
+        email: " info@myaipeople.com",
+        name: "MyAiPeople team",
       },
     },
   },
