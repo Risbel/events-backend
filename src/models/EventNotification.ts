@@ -23,6 +23,9 @@ const EventNotification = sequelize.define("eventNotification", {
   expDate: {
     type: DataTypes.DATE,
   },
+  image: {
+    type: DataTypes.STRING,
+  },
 });
 
 export default EventNotification;

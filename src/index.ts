@@ -30,6 +30,7 @@ import usersRoutes from "./routes/users.routes";
 import userBankCardRoutes from "./routes/userBankCards.routes";
 import authRoutes from "./routes/auth.routes";
 import discoRoutes from "./routes/discos.routes";
+import notifications from "./routes/notifications.routes";
 import discoDetailsRoutes from "./routes/discoDetails.routes";
 import discoTicketsRoutes from "./routes/discoTickets.routes";
 import comboRoutes from "./routes/combos.routes";
@@ -98,6 +99,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/user", usersRoutes);
 app.use("/api/userBankCard", userBankCardRoutes);
 app.use("/api/disco", discoRoutes);
+app.use("/api/notifications", notifications);
 app.use("/api/discoDetail", discoDetailsRoutes);
 app.use("/api/discoTicket", discoTicketsRoutes);
 app.use("/api/combo", comboRoutes);
@@ -120,8 +122,7 @@ const PORT = process.env.PORT || 4000;
 async function main() {
   try {
     await sequelize.sync({ alter: true, logging: false });
-
-    await createPermissionsResources();
+    // await createPermissionsResources();
 
     app.listen(PORT, async () => {
       console.log("server on port", PORT);
