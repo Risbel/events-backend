@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import EventNotification from "../models/EventNotification";
 import { uploadImage } from "../utils/minio";
+import Subscription from "../models/Subscription";
+import SubscriptionNotification from "../models/SubscriptionNotification";
 
 export const getNotificationsByEventId = async (req: Request, res: Response) => {
   try {
@@ -27,10 +29,10 @@ export const getNotificationsByEventId = async (req: Request, res: Response) => 
 export const createEventNotification = async (req: Request, res: Response) => {
   try {
     const { eventId } = req.params;
-    const { type, title, description, expDate } = req.body;
+    const { type, title, description, expDate, userId } = req.body;
     const image: any = req.file ? await uploadImage(req.file) : null;
 
-    const notification = await EventNotification.create({
+    const notification: INotification = await EventNotification.create({
       discoId: eventId,
       type,
       title,
@@ -38,6 +40,21 @@ export const createEventNotification = async (req: Request, res: Response) => {
       expDate,
       image: image ? `https://${encodeURI(image)}` : null,
     });
+
+    const subscriptions: ISubscription[] = await Subscription.findAll({
+      where: {
+        discoId: eventId,
+      },
+    });
+
+    const subscriptionNotificationsPromises = subscriptions.map((subscription) =>
+      SubscriptionNotification.create({
+        eventNotificationId: notification.id,
+        subscriptionId: subscription.id,
+      })
+    );
+
+    await Promise.all(subscriptionNotificationsPromises);
 
     return res.status(200).json(notification);
   } catch (error: any) {
@@ -49,11 +66,7 @@ export const deleteNotification = async (req: Request, res: Response): Promise<R
   try {
     const { id } = req.params;
 
-    const rowsDeleted = await EventNotification.destroy({ where: { id } });
-
-    if (rowsDeleted === 0) {
-      return res.status(404).json({ error: "Notification not found" });
-    }
+    await EventNotification.destroy({ where: { id }, cascade: true });
 
     return res.status(204).send();
   } catch (error: any) {
@@ -83,3 +96,123 @@ export const editNotification = async (req: Request, res: Response) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+export const getNotificationsBySubscription = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const { page, limit, search } = req.query;
+
+    const offset = (Number(page) - 1) * Number(limit);
+
+    const notifications = await Subscription.findAll({
+      where: { userId: userId },
+      include: [
+        {
+          model: SubscriptionNotification,
+          include: [
+            {
+              model: EventNotification,
+            },
+          ],
+        },
+      ],
+      limit: Number(limit),
+      offset: Number(offset),
+      order: [["createdAt", "DESC"]],
+    });
+
+    return res.status(200).json(notifications);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+}; //not used for now
+
+export const getNotificationsByUserEvent = async (req: Request, res: Response) => {
+  try {
+    const { userId, eventId } = req.params;
+    const { page, limit, search } = req.query;
+
+    const offset = (Number(page) - 1) * Number(limit);
+
+    const notifications = await Subscription.findOne({
+      where: { userId: userId, discoId: eventId },
+      include: [
+        {
+          model: SubscriptionNotification,
+          where: { isDeleted: false },
+          include: [
+            {
+              model: EventNotification,
+            },
+          ],
+        },
+      ],
+      limit: Number(limit),
+      offset: Number(offset),
+      order: [["createdAt", "DESC"]],
+    });
+
+    return res.status(200).json(notifications);
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateNotificationIsRead = async (req: Request, res: Response) => {
+  try {
+    const { notificationId } = req.params;
+
+    const subscriptionNotification: any = await SubscriptionNotification.findOne({
+      where: { eventNotificationId: notificationId },
+    });
+
+    subscriptionNotification.isRead = !subscriptionNotification.isRead;
+
+    await subscriptionNotification.save();
+
+    return res.status(200).json({ subscriptionNotification });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateNotificationIsDeleted = async (req: Request, res: Response) => {
+  try {
+    const { notificationId } = req.params;
+
+    const subscriptionNotification: any = await SubscriptionNotification.findOne({
+      where: { eventNotificationId: notificationId },
+    });
+
+    subscriptionNotification.isDeleted = !subscriptionNotification.isDeleted;
+
+    await subscriptionNotification.save();
+
+    return res.status(200).json({ subscriptionNotification });
+  } catch (error: any) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+export interface INotification {
+  id: string;
+  isDeleted: boolean;
+  discoId: string;
+  type: string;
+  title: string;
+  description: string;
+  expDate: string;
+  image: string;
+  updatedAt: string;
+  createdAt: string;
+  priority: string;
+}
+
+export interface ISubscription {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+  roleId: string;
+  discoId: string;
+}

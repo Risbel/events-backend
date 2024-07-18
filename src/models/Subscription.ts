@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
-import SuscriptionNotification from "./SuscriptionNotification";
+import SuscriptionNotification from "./SubscriptionNotification";
 
-const Subscription = sequelize.define("subscription", {
+const Subscription: any = sequelize.define("subscription", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,

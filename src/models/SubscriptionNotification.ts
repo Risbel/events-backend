@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
 
-const SuscriptionNotification = sequelize.define("suscriptionNotification", {
+const SubscriptionNotification = sequelize.define("subscriptionNotification", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -9,7 +9,12 @@ const SuscriptionNotification = sequelize.define("suscriptionNotification", {
   },
   isRead: {
     type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
   },
 });
 
-export default SuscriptionNotification;
+export default SubscriptionNotification;

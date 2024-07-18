@@ -1,8 +1,8 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../database/database";
-import SuscriptionNotification from "./SuscriptionNotification";
+import SubscriptionNotification from "./SubscriptionNotification";
 
-const EventNotification = sequelize.define("eventNotification", {
+const EventNotification: any = sequelize.define("eventNotification", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -30,13 +30,18 @@ const EventNotification = sequelize.define("eventNotification", {
 
 export default EventNotification;
 
-EventNotification.hasMany(SuscriptionNotification, {
+EventNotification.hasMany(SubscriptionNotification, {
   foreignKey: {
     name: "eventNotificationId",
   },
+  onDelete: "CASCADE",
   sourceKey: "id",
 });
-SuscriptionNotification.belongsTo(EventNotification, {
-  foreignKey: "eventNotificationId",
+SubscriptionNotification.belongsTo(EventNotification, {
+  foreignKey: {
+    name: "eventNotificationId",
+    allowNull: false,
+  },
+  onDelete: "CASCADE",
   targetKey: "id",
 });
