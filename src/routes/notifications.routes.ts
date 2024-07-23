@@ -6,6 +6,7 @@ import {
   getNotificationsByEventId,
   getNotificationsBySubscription,
   getNotificationsByUserEvent,
+  getNotificationsCount,
   updateNotificationIsDeleted,
   updateNotificationIsRead,
 } from "../controllers/notifications.controllers";
@@ -15,6 +16,7 @@ const router = Router();
 
 router.get("/:eventId", getNotificationsByEventId);
 router.get("/subscription/:userId", getNotificationsBySubscription);
+router.get("/subscription/count/:userId/:eventId", getNotificationsCount);
 router.get("/subscription/:userId/:eventId", getNotificationsByUserEvent);
 router.post("/:eventId", upload.single("image"), createEventNotification);
 router.delete("/:id", deleteNotification);

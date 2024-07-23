@@ -149,7 +149,6 @@ export const getNotificationsByUserEvent = async (req: Request, res: Response) =
       ],
       limit: Number(limit),
       offset: Number(offset),
-      order: [["createdAt", "DESC"]],
     });
 
     return res.status(200).json(notifications);
@@ -158,6 +157,26 @@ export const getNotificationsByUserEvent = async (req: Request, res: Response) =
   }
 };
 
+export const getNotificationsCount = async (req: Request, res: Response) => {
+  try {
+    const { userId, eventId } = req.params;
+
+    const subscription = await Subscription.findOne({
+      where: { userId: userId, discoId: eventId },
+    });
+    const notificationsCount = await SubscriptionNotification.count({
+      where: {
+        subscriptionId: subscription.id,
+        isDeleted: false,
+        isRead: false,
+      },
+    });
+
+    return res.status(200).json({ count: notificationsCount });
+  } catch (error: any) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 export const updateNotificationIsRead = async (req: Request, res: Response) => {
   try {
     const { notificationId } = req.params;
@@ -165,6 +184,10 @@ export const updateNotificationIsRead = async (req: Request, res: Response) => {
     const subscriptionNotification: any = await SubscriptionNotification.findOne({
       where: { eventNotificationId: notificationId },
     });
+
+    if (!subscriptionNotification) {
+      return res.status(404).json({ message: "Notification not found" });
+    }
 
     subscriptionNotification.isRead = !subscriptionNotification.isRead;
 

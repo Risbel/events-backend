@@ -121,7 +121,7 @@ const PORT = process.env.PORT || 4000;
 
 async function main() {
   try {
-    await sequelize.sync({ alter: true, logging: false });
+    // await sequelize.sync({ alter: true, logging: false });
     await createPermissionsResources();
 
     app.listen(PORT, () => {
