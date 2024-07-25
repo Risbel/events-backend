@@ -6,7 +6,6 @@ import Subscription from "../models/Subscription";
 import DiscoNetworks from "../models/DiscoNetworks";
 import DiscoImage from "../models/DiscoImage";
 import DiscoPhone from "../models/DiscoPhone";
-import User from "../models/User";
 import UserBankCard from "../models/UserBankCard";
 import DiscoColor from "../models/DiscoColor";
 import DiscoBannerImage from "../models/DiscoBannerImage";
@@ -149,8 +148,6 @@ export const getRolesByIdDisco = async (req: Request, res: Response): Promise<Re
 
 export const createDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
-    console.log(req.body);
-
     const {
       // general
       name,
@@ -180,6 +177,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bgExperiencies,
       experienciesH1Color,
       // tickets
+      titleTicketText,
       bgTicketsSection,
       ticketH1Color,
       buttonsTicketsColor,
@@ -229,6 +227,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       administrator,
       bannerDescription,
       titleTextAbout,
+      titleTicketText,
       layoutTextAbout,
       titleTextCarousel,
       address,

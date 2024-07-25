@@ -30,6 +30,9 @@ const DiscoDetail = sequelize.define("discoDetail", {
   titleTextAbout: {
     type: DataTypes.TEXT,
   },
+  titleTextTickets: {
+    type: DataTypes.TEXT,
+  },
   layoutTextAbout: {
     type: DataTypes.TEXT,
   },
