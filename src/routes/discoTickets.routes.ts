@@ -184,13 +184,6 @@ router.get("/disco/:id", getTicketsByIdDisco); //ok
  *                           type: string
  *                         bannerDescription:
  *                           type: string
- *                         DiscoBankCard:
- *                           type: object
- *                           properties:
- *                             cardNumber:
- *                               type: string
- *                             bankName:
- *                               type: string
  *                 TicketImages:
  *                   type: array
  *                   items:

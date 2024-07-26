@@ -6,7 +6,6 @@ import Subscription from "../models/Subscription";
 import DiscoNetworks from "../models/DiscoNetworks";
 import DiscoImage from "../models/DiscoImage";
 import DiscoPhone from "../models/DiscoPhone";
-import UserBankCard from "../models/UserBankCard";
 import DiscoColor from "../models/DiscoColor";
 import DiscoBannerImage from "../models/DiscoBannerImage";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
@@ -65,10 +64,6 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
             },
             {
               model: DiscoEmail,
-              required: false,
-            },
-            {
-              model: UserBankCard,
               required: false,
             },
             {
@@ -325,8 +320,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 export const updateDisco = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params;
-    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, phone, userBankCardId } =
-      req.body;
+    const { name, logo, administrator, description, largeDescription, bgImage, address, slug, phone } = req.body;
 
     const disco: any = await Disco.findByPk(id);
     const discoDetails: any = await DiscoDetail.findOne({
@@ -341,31 +335,11 @@ export const updateDisco = async (req: Request, res: Response): Promise<Response
     discoDetails.bgImage = bgImage;
     discoDetails.address = address;
     discoDetails.phone = phone;
-    discoDetails.userBankCardId = userBankCardId;
 
     const newDisco = await disco.save();
     const details = await discoDetails.save();
 
     return res.status(200).json({ disco: newDisco, details: details });
-  } catch (error: any) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-export const updateBankCard = async (req: Request, res: Response): Promise<Response> => {
-  try {
-    const { id } = req.params;
-    const { userBankCardId } = req.body;
-
-    const discoDetails: any = await DiscoDetail.findOne({
-      where: { id: id },
-    });
-
-    discoDetails.userBankCardId = userBankCardId;
-
-    const newDiscoBankCard = await discoDetails.save();
-
-    return res.status(200).json(newDiscoBankCard);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }

@@ -158,10 +158,6 @@ router.get("/token", getUserByToken); //ok
  *                             type: string
  *                           id:
  *                             type: string
- *                       UserBankCard:
- *                         type: array
- *                         items:
- *                           type: object
  *       404:
  *         description: User not found
  *         content:

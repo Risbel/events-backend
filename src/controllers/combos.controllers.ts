@@ -6,7 +6,6 @@ import { uploadImage } from "../utils/minio";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
 import Disco from "../models/Disco";
 import DiscoDetail from "../models/DiscoDetail";
-import UserBankCard from "../models/UserBankCard";
 import TicketCombo from "../models/TicketCombo";
 import DiscoTicket from "../models/DiscoTicket";
 import sequelize from "../database/database";

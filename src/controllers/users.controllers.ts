@@ -7,7 +7,6 @@ import { verify } from "jsonwebtoken";
 import Subscription from "../models/Subscription";
 import DiscoRole from "../models/DiscoRole";
 import Disco from "../models/Disco";
-import UserBankCard from "../models/UserBankCard";
 import DiscoDetail from "../models/DiscoDetail";
 
 export const getUsers = async (_req: Request, res: Response): Promise<Response> => {
@@ -42,9 +41,6 @@ export const getUser = async (req: Request, res: Response): Promise<Response> =>
             },
           ],
           attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-        {
-          model: UserBankCard,
         },
       ],
     });
@@ -228,7 +224,6 @@ export interface IMyUsers {
     address: string;
     createdAt: string;
     updatedAt: string;
-    userBankCardId: string;
     administrator: string;
     discoId: string;
   };

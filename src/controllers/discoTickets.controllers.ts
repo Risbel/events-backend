@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import DiscoTicket from "../models/DiscoTicket";
 import Disco from "../models/Disco";
 import TicketImages from "../models/TicketImages";
-import DiscoBankCard from "../models/UserBankCard";
 import DiscoDetail from "../models/DiscoDetail";
 import TicketsReservation from "../models/TicketsReservation";
 import { formatBufferTo64 } from "../utils/formatBufferTo64";
@@ -44,7 +43,7 @@ export const getTicketById = async (req: Request, res: Response) => {
 
     const discoTicket = await DiscoTicket.findByPk(id, {
       include: [
-        { model: Disco, include: [{ model: DiscoDetail, include: [{ model: DiscoBankCard }] }] },
+        { model: Disco, include: [{ model: DiscoDetail }] },
         { model: TicketImages },
         { model: TicketCombo, include: [{ model: Combo, include: [{ model: ComboDetail }] }] },
       ],

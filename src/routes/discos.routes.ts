@@ -155,8 +155,6 @@ router.get("/roles/:id", getRolesByIdDisco); //ok
  *                         type: string
  *                       phone:
  *                         type: string
- *                       userBankCardId:
- *                         type: string
  *       404:
  *         description: You haven't Events
  *       500:
@@ -266,13 +264,6 @@ router.get("/myEvents/:userId", getMyEvents); //ok
  *                             type: object
  *                             properties:
  *                               email:
- *                                 type: string
- *                         UserBankCard:
- *                           type: array
- *                           items:
- *                             type: object
- *                             properties:
- *                               cardNumber:
  *                                 type: string
  *                         DiscoColor:
  *                           type: object
@@ -480,8 +471,6 @@ router.post("/", upload.any(), createDisco); //ok
  *                 type: string
  *               phone:
  *                 type: string
- *               userBankCardId:
- *                 type: string
  *     responses:
  *       200:
  *         description: Updated
@@ -515,8 +504,6 @@ router.post("/", upload.any(), createDisco); //ok
  *                     address:
  *                       type: string
  *                     phone:
- *                       type: string
- *                     userBankCardId:
  *                       type: string
  *       500:
  *         description: Internal server error

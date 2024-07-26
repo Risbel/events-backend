@@ -3,7 +3,6 @@ import sequelize from "../database/database";
 import Reservation from "./Reservation";
 import Subscription from "./Subscription";
 import DiscoDetail from "./DiscoDetail";
-import UserBankCard from "./UserBankCard";
 
 const User = sequelize.define("User", {
   id: {
@@ -70,15 +69,6 @@ User.hasOne(DiscoDetail, {
 });
 DiscoDetail.belongsTo(User, {
   foreignKey: "administrator",
-  targetKey: "id",
-});
-
-User.hasMany(UserBankCard, {
-  foreignKey: { name: "userId" },
-  sourceKey: "id",
-});
-UserBankCard.belongsTo(User, {
-  foreignKey: "userId",
   targetKey: "id",
 });
 
