@@ -17,7 +17,6 @@ const Disco = sequelize.define("Disco", {
   name: {
     type: DataTypes.STRING,
     unique: true,
-    allowNull: false,
   },
   logo: {
     type: DataTypes.STRING,
@@ -39,10 +38,12 @@ Disco.hasOne(DiscoDetail, {
     allowNull: false,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoDetail.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 Disco.hasMany(DiscoTicket, {
@@ -51,10 +52,12 @@ Disco.hasMany(DiscoTicket, {
     allowNull: false,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoTicket.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 Disco.hasMany(Subscription, {
@@ -63,10 +66,12 @@ Disco.hasMany(Subscription, {
     allowNull: false,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 Subscription.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 Disco.hasMany(Combo, {
@@ -75,10 +80,12 @@ Disco.hasMany(Combo, {
     allowNull: false,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 Combo.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 Disco.hasMany(DiscoRole, {
@@ -87,10 +94,12 @@ Disco.hasMany(DiscoRole, {
     allowNull: false,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoRole.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 Disco.hasMany(Reservation, {
@@ -98,10 +107,12 @@ Disco.hasMany(Reservation, {
     name: "discoId",
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 Reservation.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 Disco.hasMany(EventNotification, {
@@ -109,10 +120,12 @@ Disco.hasMany(EventNotification, {
     name: "discoId",
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 EventNotification.belongsTo(Disco, {
   foreignKey: "discoId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 export default Disco;

@@ -17,26 +17,27 @@ const DiscoRole = sequelize.define("DiscoRole", {
 DiscoRole.hasMany(Subscription, {
   foreignKey: {
     name: "roleId",
-    allowNull: false,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 Subscription.belongsTo(DiscoRole, {
   foreignKey: "roleId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoRole.hasMany(rolePermissionResouce, {
   foreignKey: {
     name: "discoRoleId",
-    allowNull: true,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
-
 rolePermissionResouce.belongsTo(DiscoRole, {
   foreignKey: "discoRoleId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 export default DiscoRole;

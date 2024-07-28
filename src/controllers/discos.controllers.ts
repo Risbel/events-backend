@@ -349,11 +349,11 @@ export const deleteDisco = async (req: Request, res: Response): Promise<Response
   try {
     const { id } = req.params;
 
-    await DiscoDetail.destroy({
-      where: { discoId: id },
-    });
     await Disco.destroy({
       where: { id: id },
+    });
+    await DiscoDetail.destroy({
+      where: { discoId: id },
     });
     await DiscoRole.destroy({
       where: { discoId: id },
