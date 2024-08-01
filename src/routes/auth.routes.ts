@@ -26,10 +26,10 @@ import { signup, login, refreshToken } from "../controllers/auth.controllers";
  *      - email
  *      - password
  *      example:
- *        name: Risbel
- *        lastName: Suarez Rodriguez
- *        email: risbel@gmail.com
- *        password: Ris1234.
+ *        name: Constantin
+ *        lastName: Nechita
+ *        email: info@myaipeople.com
+ *        password: Constantin1234.
  */
 /**
  * @openapi
