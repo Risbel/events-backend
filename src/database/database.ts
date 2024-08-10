@@ -4,12 +4,22 @@ import appConfig from "../config";
 
 const db = appConfig.db as DbConfig; //as para hacer una aserción de tipo en una sola línea
 
-export const sequelize = new Sequelize(db.database, db.user, db.password, {
-  host: db.host,
-  port: parseInt(db.port),
-  dialect: "postgres",
+// export const sequelize = new Sequelize(db.name, db.user, db.password, {
+//   host: db.host,
+//   port: parseInt(db.port),
+//   dialect: "postgres",
+//   dialectModule: pg,
+//   dialectOptions: {},
+// });
+
+export const sequelize = new Sequelize(db.conectionString, {
   dialectModule: pg,
-  dialectOptions: {},
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 export default sequelize;
@@ -19,5 +29,7 @@ export interface DbConfig {
   password: string;
   host: string;
   port: string;
-  database: string;
+  name: string;
+
+  conectionString: string;
 }
