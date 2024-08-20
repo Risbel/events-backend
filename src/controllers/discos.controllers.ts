@@ -153,12 +153,21 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       // navbar
       bgNavbarColor,
       navbarForeground,
-      // home
+      // banner
+      layoutTextBanner,
       h1Banner,
       h1BannerColor,
-      bannerGradientColor,
+      h1BannerHeight,
+      h1Weight,
+      dateDescription,
+      dateDescriptionHeight,
+      dateDescriptionWeight,
+      dateDescriptionColor,
       bannerDescription,
+      bannerDescriptionHeight,
+      bannerDescriptionWeight,
       bannerDescriptionColor,
+      bannerGradientColor,
       // about
       titleAboutColor,
       titleTextAbout,
@@ -217,10 +226,18 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
     const discoId = newDisco.id;
 
     const detailsDisco: any = await DiscoDetail.create({
+      layoutTextBanner,
+      h1BannerHeight,
+      h1Weight,
+      dateDescription,
+      dateDescriptionHeight,
+      dateDescriptionWeight,
       h1Banner,
       discoId,
       administrator,
       bannerDescription,
+      bannerDescriptionHeight,
+      bannerDescriptionWeight,
       titleTextAbout,
       titleTicketText,
       layoutTextAbout,
@@ -247,6 +264,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
       bgExperiencies,
       experienciesH1Color,
       h1BannerColor,
+      dateDescriptionColor,
       bannerDescriptionColor,
       bannerGradientColor,
       brandColor,

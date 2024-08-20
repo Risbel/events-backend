@@ -18,23 +18,44 @@ const DiscoDetail = sequelize.define("discoDetail", {
   h1Banner: {
     type: DataTypes.STRING,
   },
+  h1BannerHeight: {
+    type: DataTypes.STRING, //new
+  },
+  h1Weight: {
+    type: DataTypes.STRING, //new
+  },
   bannerDescription: {
     type: DataTypes.STRING,
   },
-  aboutDescription: {
-    type: DataTypes.TEXT,
+  bannerDescriptionHeight: {
+    type: DataTypes.STRING, //new
+  },
+  bannerDescriptionWeight: {
+    type: DataTypes.STRING, //new
+  },
+  dateDescription: {
+    type: DataTypes.STRING, //new
+  },
+  dateDescriptionHeight: {
+    type: DataTypes.STRING, //new
+  },
+  dateDescriptionWeight: {
+    type: DataTypes.STRING, //new
+  },
+  layoutTextBanner: {
+    type: DataTypes.STRING, //new
   },
   titleTextCarousel: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING,
   },
   titleTextAbout: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING,
   },
   titleTextTickets: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING,
   },
   layoutTextAbout: {
-    type: DataTypes.TEXT,
+    type: DataTypes.STRING,
   },
   bgImage: {
     type: DataTypes.STRING,

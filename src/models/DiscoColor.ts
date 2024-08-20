@@ -19,6 +19,9 @@ const DiscoColor = sequelize.define("discoColor", {
   h1BannerColor: {
     type: DataTypes.STRING,
   },
+  dateDescriptionColor: {
+    type: DataTypes.STRING, //new
+  },
   bannerDescriptionColor: {
     type: DataTypes.STRING,
   },
