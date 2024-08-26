@@ -20,7 +20,8 @@ jobs:
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             cd ${{ secrets.APP_PATH }}
-            git pull
+            git fetch origin
+            git reset --hard origin/main
             cd ..
             docker-compose up -d --build ${{ secrets.APP_NAME }}
             exit
