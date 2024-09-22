@@ -26,10 +26,7 @@ export const getTicketsByIdDisco = async (req: Request, res: Response) => {
 
     const ticketsByDisco = await DiscoTicket.findAll({
       where: { discoId: id, isDeleted: false },
-      include: [
-        { model: TicketsReservation, attributes: ["id", "quantity"] },
-        { model: TicketCombo, include: [{ model: Combo }] },
-      ],
+      include: [{ model: TicketsReservation, attributes: ["id", "quantity"] }],
     });
     return res.status(200).json(ticketsByDisco);
   } catch (error: any) {

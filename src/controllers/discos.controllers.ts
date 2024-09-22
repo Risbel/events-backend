@@ -59,6 +59,9 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
               required: false,
             },
             {
+              model: DiscoBannerImage,
+            },
+            {
               model: DiscoPhone,
               required: false,
             },
