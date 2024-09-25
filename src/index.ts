@@ -47,12 +47,12 @@ import webhookRoutes from "./routes/webhook.routes";
 
 import { createPermissionsResources } from "./utils/createPermissionsResources";
 
-const { originAllowedDev, originAllowedPro }: any = config;
+const { originAllowedDev, originAllowedPro, originAllowedEvent }: any = config;
 
 const app = express();
 var bodyParser = require("body-parser");
 
-const allowedOrigins = [originAllowedPro, originAllowedDev];
+const allowedOrigins = [originAllowedPro, originAllowedDev, originAllowedEvent];
 
 app.use(
   cors({

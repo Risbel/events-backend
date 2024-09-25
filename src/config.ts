@@ -22,6 +22,7 @@ const stripe = {
 
 const originAllowedDev = process.env.URL_ALLOWED_CLIENT_DEV;
 const originAllowedPro = process.env.URL_ALLOWED_CLIENT_PRO;
+const originAllowedEvent = process.env.URL_ALLOWED_CLIENT_EVENT;
 
 const secretSignJwt: any = process.env.SECRET_SIGNATURE;
 
@@ -32,6 +33,7 @@ const appConfig = {
   minio,
   originAllowedDev,
   originAllowedPro,
+  originAllowedEvent,
   secretSignJwt,
   secretRefreshJwt,
   stripe,
