@@ -258,7 +258,7 @@ router.get("/:userId", getReservationsByUserId);
  *                   type: string
  *                   description: Error message describing the internal server error.
  */
-router.get("/:slug/reservBySlug", getReservationsByDiscoSlug);
+router.get("/reservationsBySlug/:slug", getReservationsByDiscoSlug);
 /**
  * @openapi
  * /api/reservations/combos/{id}:
