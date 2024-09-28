@@ -48,8 +48,8 @@ const createStripeSession = async (cartItems: ICartItem[], userId: string): Prom
     },
     mode: "payment",
     payment_method_types: ["card"],
-    success_url: `${process.env.URL_ALLOWED_CLIENT_PRO}/event/${cartItems[0].discoSlug}/success`,
-    cancel_url: `${process.env.URL_ALLOWED_CLIENT_PRO}/event/${cartItems[0].discoSlug}/cancel`,
+    success_url: `${process.env.URL_ALLOWED_CLIENT_EVENT}/${cartItems[0].discoSlug}/success`,
+    cancel_url: `${process.env.URL_ALLOWED_CLIENT_EVENT}/${cartItems[0].discoSlug}/cancel`,
     payment_intent_data: {
       description: `MyEvents payment from ${cartItems[0].discoSlug}`,
     },
