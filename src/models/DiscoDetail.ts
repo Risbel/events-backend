@@ -70,10 +70,12 @@ DiscoDetail.hasMany(QuickLink, {
     name: "discoDetailId",
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 QuickLink.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoDetail.hasMany(DiscoImages, {
@@ -82,10 +84,12 @@ DiscoDetail.hasMany(DiscoImages, {
     allowNull: false,
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoImages.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoDetail.hasOne(DiscoNetworks, {
@@ -93,10 +97,12 @@ DiscoDetail.hasOne(DiscoNetworks, {
     name: "discoDetailId",
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoNetworks.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoDetail.hasMany(DiscoPhone, {
@@ -104,10 +110,12 @@ DiscoDetail.hasMany(DiscoPhone, {
     name: "discoDetailId",
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoPhone.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoDetail.hasMany(DiscoEmail, {
@@ -115,37 +123,45 @@ DiscoDetail.hasMany(DiscoEmail, {
     name: "discoDetailId",
   },
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoEmail.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoDetail.hasMany(DiscoBannerImage, {
   foreignKey: "discoDetailId",
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoBannerImage.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoDetail.hasOne(DiscoColor, {
   foreignKey: "discoDetailId",
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 DiscoColor.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 DiscoDetail.hasMany(EventAbout, {
   foreignKey: "discoDetailId",
   sourceKey: "id",
+  onDelete: "CASCADE",
 });
 EventAbout.belongsTo(DiscoDetail, {
   foreignKey: "discoDetailId",
   targetKey: "id",
+  onDelete: "CASCADE",
 });
 
 export default DiscoDetail;

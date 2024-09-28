@@ -12,11 +12,19 @@ export const createPermissionsResources = async () => {
 
     if (!someResource) {
       Resource.bulkCreate([
-        { name: "Discos" },
+        { name: "Events" },
         { name: "Users" },
-        { name: "Disco Images" },
         { name: "Tickets" },
-        { name: "Admin settings on disco" },
+        { name: "Notifications" },
+        { name: "Packs" },
+        { name: "Colors" },
+        { name: "Pack-asociation" },
+        { name: "Banner-images" },
+        { name: "Banner-info" },
+        { name: "About-info" },
+        { name: "Carousel-images" },
+        { name: "Footer-info" },
+        { name: "Admin-settings-on-event" },
       ]);
     }
   } catch (error) {

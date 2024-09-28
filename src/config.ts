@@ -18,6 +18,7 @@ const minio = {
 
 const stripe = {
   testSecretKey: process.env.STRIPE_TEST_SECRET_KEY,
+  productionSecretKey: process.env.STRIPE_PRODUCTION_SECRET_KEY,
 };
 
 const originAllowedDev = process.env.URL_ALLOWED_CLIENT_DEV;
