@@ -35,6 +35,10 @@ const User = sequelize.define("User", {
   imageUrl: {
     type: DataTypes.STRING,
   },
+  tier: {
+    type: DataTypes.STRING,
+    defaultValue: "common",
+  },
 });
 
 User.hasMany(Reservation, {

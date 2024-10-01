@@ -30,6 +30,10 @@ const Disco = sequelize.define("Disco", {
   endDate: {
     type: DataTypes.DATE,
   },
+  isDeleted: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
 });
 
 Disco.hasOne(DiscoDetail, {

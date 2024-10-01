@@ -15,6 +15,7 @@ export const createPermissionsResources = async () => {
         { name: "Events" },
         { name: "Users" },
         { name: "Tickets" },
+        { name: "VIP-tickets" },
         { name: "Notifications" },
         { name: "Packs" },
         { name: "Colors" },

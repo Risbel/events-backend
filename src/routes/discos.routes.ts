@@ -6,11 +6,10 @@ import {
   getDisco,
   getDiscos,
   updateDisco,
-  deleteDisco,
+  softDeleteEvent,
   getRolesByIdDisco,
   getMyEvents,
 } from "../controllers/discos.controllers";
-import { verifyToken } from "../middlewares/authorization";
 import upload from "../utils/multer";
 
 /**
@@ -48,7 +47,7 @@ import upload from "../utils/multer";
  *       500:
  *         description: Internal server error
  */
-router.get("/", getDiscos); //ok
+router.get("/", getDiscos);
 
 /**
  * @openapi
@@ -100,7 +99,7 @@ router.get("/", getDiscos); //ok
  *       500:
  *         description: Internal server error
  */
-router.get("/roles/:id", getRolesByIdDisco); //ok
+router.get("/roles/:id", getRolesByIdDisco);
 
 /**
  * @openapi
@@ -160,7 +159,7 @@ router.get("/roles/:id", getRolesByIdDisco); //ok
  *       500:
  *         description: Internal server error
  */
-router.get("/myEvents/:userId", getMyEvents); //ok
+router.get("/myEvents/:userId", getMyEvents);
 
 /**
  * @openapi
@@ -325,7 +324,7 @@ router.get("/myEvents/:userId", getMyEvents); //ok
  *       500:
  *         description: Internal server error
  */
-router.get("/:slug/:userId?", getDisco); //ok
+router.get("/:slug/:userId?", getDisco);
 
 /**
  * @openapi
@@ -430,7 +429,7 @@ router.get("/:slug/:userId?", getDisco); //ok
  *       500:
  *         description: Internal server error
  */
-router.post("/", upload.any(), createDisco); //ok
+router.post("/", upload.any(), createDisco);
 
 /**
  * @openapi
@@ -508,7 +507,7 @@ router.post("/", upload.any(), createDisco); //ok
  *       500:
  *         description: Internal server error
  */
-router.put("/:id", updateDisco); //ok
+router.put("/:id", updateDisco);
 
 /**
  * @openapi
@@ -539,6 +538,6 @@ router.put("/:id", updateDisco); //ok
  *       500:
  *         description: Internal server error
  */
-router.delete("/:id", deleteDisco); //ok
+router.delete("/:id", softDeleteEvent); //ok
 
 export default router;

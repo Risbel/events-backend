@@ -113,6 +113,7 @@ export const deleteDiscoTicket = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     const ticket = await DiscoTicket.findByPk(id);
+
     if (!ticket) {
       return res.status(404).json({ message: "Combo not found" });
     }

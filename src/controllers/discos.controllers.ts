@@ -41,6 +41,7 @@ export const getDisco = async (req: Request, res: Response): Promise<Response> =
     const disco: any = await Disco.findOne({
       where: {
         slug: slug,
+        isDeleted: false,
       },
       include: [
         {
@@ -111,6 +112,7 @@ export const getMyEvents = async (req: Request, res: Response): Promise<Response
     const { userId } = req.params;
 
     const disco: any = await Disco.findAll({
+      where: { isDeleted: false },
       include: [
         {
           model: DiscoDetail,
@@ -120,7 +122,7 @@ export const getMyEvents = async (req: Request, res: Response): Promise<Response
     });
 
     if (!disco) {
-      return res.status(404).json({ message: "You hav't Events" });
+      return res.status(404).json({ message: "You don't have Events" });
     }
 
     return res.status(200).json(disco);
@@ -318,6 +320,7 @@ export const createDisco = async (req: Request, res: Response): Promise<Response
 
     const discoRoles = await DiscoRole.bulkCreate([
       { name: "user", discoId },
+      { name: "VIP-user", discoId },
       { name: "moderator", discoId },
       { name: "admin", discoId },
     ]);
@@ -366,21 +369,19 @@ export const updateDisco = async (req: Request, res: Response): Promise<Response
   }
 };
 
-export const deleteDisco = async (req: Request, res: Response): Promise<Response> => {
+export const softDeleteEvent = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { id } = req.params;
 
-    await Disco.destroy({
-      where: { id: id },
-    });
-    await DiscoDetail.destroy({
-      where: { discoId: id },
-    });
-    await DiscoRole.destroy({
-      where: { discoId: id },
-    });
+    const event = await Disco.findByPk(id);
 
-    return res.status(200).json({ message: "Disco deleted successfuly" });
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    event.update({ isDeleted: true });
+
+    return res.status(204).json({ message: "Event deleted successfully" });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
