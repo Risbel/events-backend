@@ -11,7 +11,7 @@ import path from "path";
 //-----To upload images but also to store the files in a custom local folder---
 const storage = Multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "src/uploads");
+    cb(null, path.join(__dirname, "uploads"));
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
