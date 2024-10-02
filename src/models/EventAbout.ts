@@ -9,6 +9,7 @@ const EventAbout = sequelize.define("eventAbout", {
   },
   title: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
   titleColor: {
     type: DataTypes.STRING,
@@ -17,7 +18,7 @@ const EventAbout = sequelize.define("eventAbout", {
     type: DataTypes.STRING,
   },
   text: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
   },
   textAlign: {
     type: DataTypes.STRING,
