@@ -89,11 +89,11 @@ app.use(
 
 app.use(cookieParser());
 app.use(morgan("dev")); //muestra por consola en modo desarrollo las solicitudes y errores n casos de fallos
-
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: false, parameterLimit: 50000 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
 app.use("/api/user", usersRoutes);
 app.use("/api/disco", discoRoutes);
 app.use("/api/notifications", notifications);
@@ -115,7 +115,7 @@ app.use("/api/webhook", webhookRoutes);
 
 const PORT = process.env.PORT || 4000;
 
-async function main() {
+async function initializeApp() {
   try {
     await sequelize.sync({ alter: true, logging: false });
     await createPermissionsResources();
@@ -130,4 +130,7 @@ async function main() {
   }
 }
 
-main();
+initializeApp();
+
+// Export handler for Vercel
+export default app;
