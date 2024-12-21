@@ -29,24 +29,23 @@ export const uploadImage = async (file: any) => {
   }).then(() => {
     const minioEndpoint = config.minio.endpoint;
     const bucketName = config.minio.bucketName;
-    const objectName = `${Date.now()}-${file.originalname}`;
+    const objectName = file?.originalname;
     const fileUrl = `${minioEndpoint}/${bucketName}/${objectName}`;
 
     // Return fileUrl after deleting the file
     return new Promise((resolve, reject) => {
-      if (fs.existsSync(file.path)) {
+      if (file && file.path) {
         fs.unlink(file.path, (err) => {
           if (err) {
             console.error("Error deleting uploaded file:", err);
-            reject(err);
+            reject(err); // Reject if there's an error
           } else {
             console.log("Uploaded file deleted successfully");
-            resolve(fileUrl);
+            resolve(fileUrl); // Resolve with fileUrl
           }
         });
       } else {
-        console.error("File not found, cannot delete");
-        resolve(fileUrl);
+        resolve(fileUrl); // Resolve with fileUrl if there's no file.path
       }
     });
   });
